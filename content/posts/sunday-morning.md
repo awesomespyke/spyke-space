@@ -2,7 +2,6 @@
 date = '2026-05-31T08:16:10-05:00'
 draft = false
 title = 'Sunday Morning'
-aliases = ["/post/sunday-morning/"]
 
 tags = [
 "Home",

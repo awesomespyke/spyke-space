@@ -2,7 +2,6 @@
 date = '2026-06-13T23:48:51-05:00'
 draft = false
 title = 'See_You_At_Sunrise'
-aliases = ["/post/edc26/"]
 
 tags = [
 "Las Vegas",
