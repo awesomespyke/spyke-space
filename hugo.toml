@@ -25,7 +25,7 @@ url = "/guestbook/"
 weight = 40
 
 [params.sidebar]
-emoji = "💎"
+emoji = "✨"
 subtitle = "A place to wonder."
 avatar = "/img/avatar.png"
 
