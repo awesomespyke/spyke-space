@@ -1,5 +1,5 @@
 +++
-title = "Spyke Space"
+title = "Spyke.space"
 comments = false
 aliases = ["/music/"]
 +++
