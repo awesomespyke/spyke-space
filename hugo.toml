@@ -33,7 +33,7 @@ enabled = false
 provider = "giscus"
 
 [params.comments.giscus]
-repo = "awesomespyke/field-notes"
+repo = "awesomespyke/spyke-space"
 repoID = "R_kgDOSuaJxA"
 category = "General"
 categoryID = "DIC_kwDOSuaJxM4C_KSA"

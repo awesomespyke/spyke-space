@@ -37,7 +37,7 @@ I’m **@wonderspyke** around the internet. Or leave me a note here—I read eve
 A free GitHub account is required to leave a message.
 
 <script src="https://giscus.app/client.js"
-        data-repo="awesomespyke/field-notes"
+        data-repo="awesomespyke/spyke-space"
         data-repo-id="R_kgDOSuaJxA"
         data-category="General"
         data-category-id="DIC_kwDOSuaJxM4C_KSA"
