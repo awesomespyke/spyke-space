@@ -18,7 +18,6 @@
     </article>
 
     <section class="article-list">
-        <h2>Latest Notes</h2>
 
         {{ range .Pages.ByDate.Reverse }}
             {{ partial "article-list/default" . }}
