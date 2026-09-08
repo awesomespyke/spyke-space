@@ -1,29 +1,50 @@
 +++
-title = "About"
+title = "About Me"
+url = "/about/"
+layout = "about"
+
+[profile]
+name = "Spyke"
+photo = "/img/spyke.jpeg"
 +++
 
-Welcome.
+Hi, I'm Spyke.
 
-Spyke Space is a place for paying attention.
+This is Spyke Space, my little corner of the internet for the things I'm thinking about, making, listening to, learning, and paying attention to.
 
-The notes you'll find here begin with ordinary things: a library project, a conversation, a walk, a photograph, a bubble drifting across a bath, a question that refused to leave me alone. Given enough time, they often reveal themselves to be about something else entirely.
+Field Notes are where I write some of it down. The rest tends to accumulate around here in other ways.
 
-I don't write to document my life.
+### A few things I share
 
-I write to understand it.
+**My Library**  
+I keep a personal collection of books at [The Library](https://library.spyke.space/). If you'd like a library card, ask me below.
 
-Over the years I've learned that understanding can't be rushed. Some questions unfold over an afternoon. Others take months, or quietly wait for decades before they make sense. I've stopped trying to force those moments. Instead, I've tried to become more available to them.
+**The Frame**  
+A shared place for photographs and glimpses of the world. [See what it's about](/posts/the-frame/).
 
-Field Notes are the result.
+**Listening Pass**  
+I share my music library through Plexamp. If you'd like to listen, ask me below.
 
-This site is less a blog than a field station—a place where observations, experiments, and stories are collected, tended, and occasionally connected to one another. Nothing here is finished. Many ideas return years later wearing different clothes.
+### Say hello
 
-You'll notice recurring themes: libraries, stewardship, photography, gardens, clothing, technology, fragrance, and the natural world. Those are simply the landscapes where I happen to wander. The real subjects are usually attention, curiosity, and the quiet practice of learning how to see.
+Whether we've known each other for years or you've only just wandered in, you're welcome to leave me a note, ask a question, or tell me what brought you here.
 
-Many of these essays are developed through extended conversations with ChatGPT. I use it as a thinking partner, much as I might use a notebook, a trusted colleague, or a long walk. The experiences are mine. The understanding emerges through dialogue. I mention this not as a disclaimer, but because honesty about the process matters to me.
+I read every note.
 
-If you've found your way here, you're welcome to wander.
+A free GitHub account is required to leave a message.
 
-Take your time.
-
-Nothing is what it seems.
+<script src="https://giscus.app/client.js"
+        data-repo="awesomespyke/field-notes"
+        data-repo-id="R_kgDOSuaJxA"
+        data-category="General"
+        data-category-id="DIC_kwDOSuaJxM4C_KSA"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="0"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>

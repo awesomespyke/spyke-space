@@ -1,0 +1,38 @@
+{{ define "body-class" }}
+    article-page
+{{ end }}
+
+{{ define "main" }}
+
+    <article class="main-article about-profile">
+
+        {{ with .Params.profile }}
+            <header class="about-profile-header">
+
+                {{ with .photo }}
+                    <img
+                        class="about-profile-photo"
+                        src="{{ . }}"
+                        alt="Portrait of {{ $.Params.profile.name }}"
+                    >
+                {{ end }}
+
+                <div class="about-profile-intro">
+                    <h1 class="article-title">{{ $.Params.profile.name }}</h1>
+                </div>
+
+            </header>
+        {{ end }}
+
+        <section class="article-content">
+            {{ .Content }}
+        </section>
+
+    </article>
+
+    {{ partialCached "footer/footer" . }}
+
+{{ end }}
+
+{{ define "right-sidebar" }}
+{{ end }}

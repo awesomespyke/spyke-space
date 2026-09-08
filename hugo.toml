@@ -10,19 +10,14 @@ theme= 'hugo-theme-stack'
 
 
 [[menu.main]]
-name = "Field Notes"
-url = "/blog/"
+name = "Posts"
+url = "/posts/"
 weight = 20
 
 [[menu.main]]
-name = "About"
-url = "/page/about/"
+name = "About Me"
+url = "/about/"
 weight = 25
-
-[[menu.main]]
-name = "Guestbook"
-url = "/guestbook/"
-weight = 40
 
 [params.sidebar]
 emoji = "✨"
@@ -31,10 +26,7 @@ avatar = "/img/avatar.png"
 
 [params.widgets]
 homepage = []
-
-page = [
-  { type = "toc" }
-]
+page = []
 
 [params.comments]
 enabled = false

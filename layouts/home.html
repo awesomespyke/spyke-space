@@ -17,7 +17,7 @@
     <section class="article-list">
         <h2>Field Notes</h2>
 
-        {{ range first 4 (where .Site.RegularPages "Section" "blog").ByDate.Reverse }}
+        {{ range first 4 (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
             {{ partial "article-list/compact" . }}
         {{ end }}
     </section>

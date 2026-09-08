@@ -68,4 +68,4 @@ And perhaps the strangest part is this:
 I don't think I released the postcard.
 I think, little by little, the postcard released me.
 
-P.S. The postcards are ready to share. If you'd like one, sign my guestbook or reach out another way. I'd be happy to write to you.
+P.S. The postcards are ready to share. If you'd like one, leave me a note or reach out another way. I'd be happy to write to you.

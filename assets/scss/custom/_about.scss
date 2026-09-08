@@ -1,0 +1,29 @@
+.about-profile-header {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.about-profile-photo {
+    width: 140px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.about-profile-intro .article-title {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .about-profile-header {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .about-profile-photo {
+        width: 120px;
+    }
+}
