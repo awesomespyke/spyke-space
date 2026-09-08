@@ -1,11 +1,5 @@
 +++
 title = "Spyke Space"
-description = "A place to wander."
 comments = false
+aliases = ["/music/"]
 +++
-
-> Welcome to Spyke Space.
->
-> This place is still revealing itself.
->
-> Wonder where your curiosity leads.

@@ -20,11 +20,6 @@ url = "/page/about/"
 weight = 25
 
 [[menu.main]]
-name = "Music"
-url = "/music/"
-weight = 30
-
-[[menu.main]]
 name = "Guestbook"
 url = "/guestbook/"
 weight = 40
@@ -38,8 +33,7 @@ avatar = "/img/avatar.png"
 homepage = []
 
 page = [
-  { type = "toc" },
-  { type = "tag-cloud" }
+  { type = "toc" }
 ]
 
 [params.comments]
@@ -59,3 +53,6 @@ emitMetadata = "0"
 inputPosition = "top"
 theme = "preferred_color_scheme"
 lang = "en"
+
+[params.article.list]
+showTags = false
