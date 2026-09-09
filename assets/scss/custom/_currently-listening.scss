@@ -2,6 +2,11 @@
     margin: 2rem 0;
 }
 
+.currently-listening h2,
+.article-list > h2 {
+    color: var(--card-text-color-main);
+}
+
 .album-shelf {
     display: flex;
     gap: 1rem;
@@ -29,7 +34,11 @@
     display: block;
 }
 
+.album-card strong {
+    color: var(--card-text-color-main);
+}
+
 .album-card small {
     margin-top: 0.2rem;
-    opacity: 0.7;
+    color: var(--card-text-color-secondary);
 }
