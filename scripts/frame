@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -e
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: frame <image>"
+    exit 1
+fi
+
+IMAGE="$1"
+
+if [ ! -f "$IMAGE" ]; then
+    echo "Image not found: $IMAGE"
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+FRAME_DIR="$PROJECT_DIR/static/frame"
+
+cd "$PROJECT_DIR"
+
+UNRELATED_CHANGES="$(
+    git status --porcelain |
+    grep -vE ' (content/page/frame\.md|layouts/page/frame\.html|static/frame/|scripts/)' ||
+    true
+)"
+
+if [ -n "$UNRELATED_CHANGES" ]; then
+    echo "Frame stopped: spyke.space has unrelated changes:"
+    echo "$UNRELATED_CHANGES"
+    echo
+    echo "Commit or resolve those changes first."
+    exit 1
+fi
+
+FILENAME="$(basename "$IMAGE")"
+DESTINATION="$FRAME_DIR/$FILENAME"
+
+mkdir -p "$FRAME_DIR"
+
+if [ "$(cd "$(dirname "$IMAGE")" && pwd)/$(basename "$IMAGE")" != "$DESTINATION" ]; then
+    cp "$IMAGE" "$DESTINATION"
+fi
+
+WIDTH="$(sips -g pixelWidth "$DESTINATION" | awk '/pixelWidth/ {print $2}')"
+HEIGHT="$(sips -g pixelHeight "$DESTINATION" | awk '/pixelHeight/ {print $2}')"
+
+if [ "$HEIGHT" -gt "$WIDTH" ]; then
+    ORIENTATION="portrait"
+else
+    ORIENTATION="landscape"
+fi
+
+FRAME_PAGE="$PROJECT_DIR/content/page/frame.md"
+
+python3 - "$FRAME_PAGE" "$FILENAME" "$ORIENTATION" <<'PY'
+import sys
+from pathlib import Path
+
+page = Path(sys.argv[1])
+filename = sys.argv[2]
+orientation = sys.argv[3]
+
+text = page.read_text()
+
+lines = []
+for line in text.splitlines():
+    if line.startswith("image:"):
+        line = f'image: "/frame/{filename}"'
+    elif line.startswith("orientation:"):
+        line = f'orientation: "{orientation}"'
+    lines.append(line)
+
+page.write_text("\n".join(lines) + "\n")
+PY
+
+echo "Resident:"
+echo "$FILENAME"
+echo "Orientation: $ORIENTATION"
