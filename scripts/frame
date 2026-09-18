@@ -60,8 +60,8 @@ if [ "$(cd "$(dirname "$MEDIA")" && pwd)/$(basename "$MEDIA")" != "$DESTINATION"
 fi
 
 if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
-    WIDTH="$(mdls -raw -name kMDItemPixelWidth "$DESTINATION")"
-    HEIGHT="$(mdls -raw -name kMDItemPixelHeight "$DESTINATION")"
+    WIDTH="$(/opt/homebrew/bin/ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$DESTINATION")"
+    HEIGHT="$(/opt/homebrew/bin/ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$DESTINATION")"
 else
     WIDTH="$(sips -g pixelWidth "$DESTINATION" | awk '/pixelWidth/ {print $2}')"
     HEIGHT="$(sips -g pixelHeight "$DESTINATION" | awk '/pixelHeight/ {print $2}')"
