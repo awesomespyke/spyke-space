@@ -34,7 +34,8 @@ body {
   justify-content: center;
 }
 
-    img {
+    img,
+video {
       display: block;
       width: 100%;
       height: 100%;
@@ -44,6 +45,10 @@ body {
 </head>
 
 <body>
+  {{ if eq .Params.type "video" }}
+  <video src="{{ .Params.image }}" autoplay muted loop playsinline></video>
+{{ else }}
   <img src="{{ .Params.image }}" alt="">
+{{ end }}
 </body>
 </html>

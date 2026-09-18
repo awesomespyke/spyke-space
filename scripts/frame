@@ -45,8 +45,16 @@ if [ "$(cd "$(dirname "$IMAGE")" && pwd)/$(basename "$IMAGE")" != "$DESTINATION"
     cp "$IMAGE" "$DESTINATION"
 fi
 
-WIDTH="$(sips -g pixelWidth "$DESTINATION" | awk '/pixelWidth/ {print $2}')"
-HEIGHT="$(sips -g pixelHeight "$DESTINATION" | awk '/pixelHeight/ {print $2}')"
+EXTENSION="${FILENAME##*.}"
+EXTENSION="$(echo "$EXTENSION" | tr '[:upper:]' '[:lower:]')"
+
+if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
+    WIDTH="$(mdls -raw -name kMDItemPixelWidth "$DESTINATION")"
+    HEIGHT="$(mdls -raw -name kMDItemPixelHeight "$DESTINATION")"
+else
+    WIDTH="$(sips -g pixelWidth "$DESTINATION" | awk '/pixelWidth/ {print $2}')"
+    HEIGHT="$(sips -g pixelHeight "$DESTINATION" | awk '/pixelHeight/ {print $2}')"
+fi
 
 if [ "$HEIGHT" -gt "$WIDTH" ]; then
     ORIENTATION="portrait"
@@ -56,13 +64,13 @@ fi
 
 FRAME_PAGE="$PROJECT_DIR/content/page/frame.md"
 
-python3 - "$FRAME_PAGE" "$FILENAME" "$ORIENTATION" <<'PY'
+python3 - "$FRAME_PAGE" "$FILENAME" "$ORIENTATION" "$EXTENSION" <<'PY'
 import sys
 from pathlib import Path
 
 page = Path(sys.argv[1])
-filename = sys.argv[2]
-orientation = sys.argv[3]
+extension = sys.argv[4]
+media_type = "video" if extension in ("mp4", "mov") else "image"
 
 text = page.read_text()
 
@@ -70,8 +78,8 @@ lines = []
 for line in text.splitlines():
     if line.startswith("image:"):
         line = f'image: "/frame/{filename}"'
-    elif line.startswith("orientation:"):
-        line = f'orientation: "{orientation}"'
+    elif line.startswith("type:"):
+    line = f'type: "{media_type}"'
     lines.append(line)
 
 page.write_text("\n".join(lines) + "\n")
