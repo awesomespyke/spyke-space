@@ -87,6 +87,9 @@ for line in text.splitlines():
         line = f'type: "{media_type}"'
     lines.append(line)
 
+if not any(line.startswith("type:") for line in lines):
+    lines.insert(-1, f'type: "{media_type}"')
+
 page.write_text("\n".join(lines) + "\n")
 PY
 
