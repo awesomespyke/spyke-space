@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/101476-video-1080.mp4"
+image: "/frame/skiska.jpeg"
 orientation: "portrait"
-type: "video"
+type: "image"
 ---
