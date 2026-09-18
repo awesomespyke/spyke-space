@@ -78,3 +78,14 @@ PY
 echo "Resident:"
 echo "$FILENAME"
 echo "Orientation: $ORIENTATION"
+
+git pull --rebase
+
+git add content/page/frame.md "static/frame/$FILENAME"
+
+git commit -m "Change Frame resident to ${FILENAME%.*}"
+
+git push
+
+echo
+echo "Published to Frame."
