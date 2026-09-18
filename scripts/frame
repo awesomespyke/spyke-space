@@ -3,14 +3,14 @@
 set -e
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: frame <image>"
+    echo "Usage: frame <media>"
     exit 1
 fi
 
-IMAGE="$1"
+MEDIA="$1"
 
-if [ ! -f "$IMAGE" ]; then
-    echo "Image not found: $IMAGE"
+if [ ! -f "$MEDIA" ]; then
+    echo "Image not found: $MEDIA"
     exit 1
 fi
 
@@ -36,17 +36,28 @@ fi
 
 git pull --rebase
 
-FILENAME="$(basename "$IMAGE")"
+FILENAME="$(basename "$MEDIA")"
 DESTINATION="$FRAME_DIR/$FILENAME"
 
 mkdir -p "$FRAME_DIR"
 
-if [ "$(cd "$(dirname "$IMAGE")" && pwd)/$(basename "$IMAGE")" != "$DESTINATION" ]; then
-    cp "$IMAGE" "$DESTINATION"
-fi
-
 EXTENSION="${FILENAME##*.}"
 EXTENSION="$(echo "$EXTENSION" | tr '[:upper:]' '[:lower:]')"
+
+if [ "$(cd "$(dirname "$MEDIA")" && pwd)/$(basename "$MEDIA")" != "$DESTINATION" ]; then
+    if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
+        echo "Preparing video for Frame..."
+        ffmpeg -y -i "$MEDIA" \
+            -c:v libx264 \
+            -crf 24 \
+            -preset medium \
+            -an \
+            -movflags +faststart \
+            "$DESTINATION"
+    else
+        cp "$MEDIA" "$DESTINATION"
+    fi
+fi
 
 if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
     WIDTH="$(mdls -raw -name kMDItemPixelWidth "$DESTINATION")"
