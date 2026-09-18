@@ -2,6 +2,6 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/skiska.jpeg"
+image: "/frame/halloween.jpg"
 orientation: "portrait"
 ---
