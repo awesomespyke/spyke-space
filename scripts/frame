@@ -47,7 +47,7 @@ EXTENSION="$(echo "$EXTENSION" | tr '[:upper:]' '[:lower:]')"
 if [ "$(cd "$(dirname "$MEDIA")" && pwd)/$(basename "$MEDIA")" != "$DESTINATION" ]; then
     if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
         echo "Preparing video for Frame..."
-        ffmpeg -y -i "$MEDIA" \
+        /opt/homebrew/bin/ffmpeg -y -i "$MEDIA" \
             -c:v libx264 \
             -crf 24 \
             -preset medium \
