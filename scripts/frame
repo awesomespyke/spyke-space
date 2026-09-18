@@ -34,6 +34,8 @@ if [ -n "$UNRELATED_CHANGES" ]; then
     exit 1
 fi
 
+git pull --rebase
+
 FILENAME="$(basename "$IMAGE")"
 DESTINATION="$FRAME_DIR/$FILENAME"
 
@@ -78,8 +80,6 @@ PY
 echo "Resident:"
 echo "$FILENAME"
 echo "Orientation: $ORIENTATION"
-
-git pull --rebase
 
 git add content/page/frame.md "static/frame/$FILENAME"
 
