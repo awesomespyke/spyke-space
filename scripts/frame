@@ -36,7 +36,19 @@ fi
 
 git pull --rebase
 
-FILENAME="$(basename "$MEDIA")"
+ORIGINAL_FILENAME="$(basename "$MEDIA")"
+
+FILENAME="$(python3 - "$ORIGINAL_FILENAME" <<'PY'
+import sys
+import unicodedata
+
+name = sys.argv[1]
+name = unicodedata.normalize("NFKD", name)
+name = name.encode("ascii", "ignore").decode("ascii")
+print(name)
+PY
+)"
+
 DESTINATION="$FRAME_DIR/$FILENAME"
 
 mkdir -p "$FRAME_DIR"
