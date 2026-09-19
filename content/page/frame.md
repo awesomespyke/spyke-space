@@ -2,8 +2,8 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/Albert_Joseph_Penot_-_La_Femme_Chauve-Souris.jpg"
-orientation: "portrait"
+image: "/frame/SAAM-1994.120_1.jpg"
+orientation: "landscape"
 type: "image"
 
 ---
