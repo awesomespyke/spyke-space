@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -e
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: frame-collection <collection>"
+    exit 1
+fi
+
+COLLECTION="$1"
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+FRAME_PAGE="$PROJECT_DIR/content/page/frame.md"
+COLLECTIONS="$PROJECT_DIR/data/frame_collections.yaml"
+
+cd "$PROJECT_DIR"
+
+if ! grep -q "^${COLLECTION}:" "$COLLECTIONS"; then
+    echo "Unknown Frame collection: $COLLECTION"
+    exit 1
+fi
+
+UNRELATED_CHANGES="$(
+    git status --porcelain |
+    grep -vE ' (content/page/frame\.md|scripts/)' ||
+    true
+)"
+
+if [ -n "$UNRELATED_CHANGES" ]; then
+    echo "Frame stopped: spyke.space has unrelated changes:"
+    echo "$UNRELATED_CHANGES"
+    echo
+    echo "Commit or resolve those changes first."
+    exit 1
+fi
+
+git pull --rebase
+
+python3 - "$FRAME_PAGE" "$COLLECTION" <<'PY'
+import sys
+from pathlib import Path
+
+page = Path(sys.argv[1])
+collection = sys.argv[2]
+
+lines = page.read_text().splitlines()
+output = []
+found = False
+
+for line in lines:
+    if line.startswith("collection:"):
+        output.append(f'collection: "{collection}"')
+        found = True
+    else:
+        output.append(line)
+
+if not found:
+    # Insert immediately before the closing front-matter delimiter.
+    closing = max(i for i, line in enumerate(output) if line.strip() == "---")
+    output.insert(closing, f'collection: "{collection}"')
+
+page.write_text("\n".join(output) + "\n")
+PY
+
+git add content/page/frame.md
+
+if git diff --cached --quiet; then
+    echo "Collection already in residence: $COLLECTION"
+    exit 0
+fi
+
+git commit -m "Change Frame collection to $COLLECTION"
+git push
+
+echo
+echo "Collection in residence: $COLLECTION"
