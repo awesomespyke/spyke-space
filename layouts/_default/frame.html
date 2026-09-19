@@ -75,7 +75,14 @@ video {
 {{ end }}
 
 
-{{ with .Params.label }}
+{{ $filename := path.Base .Params.image }}
+{{ $label := index hugo.Data.frame_labels $filename }}
+
+{{ if not $label }}
+  {{ $label = .Params.label }}
+{{ end }}
+
+{{ with $label }}
 <div class="frame-label">
   <div class="frame-label-title">{{ .title }}</div>
   {{ with .creator }}<div>{{ . }}</div>{{ end }}
