@@ -41,6 +41,29 @@ video {
       height: 100%;
       object-fit: contain;
     }
+
+.frame-label {
+  position: absolute;
+  left: 4%;
+  bottom: 4%;
+  max-width: 55%;
+  padding: 18px 22px;
+  background: rgba(0, 0, 0, 0.68);
+  color: rgba(255, 255, 255, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.frame-label-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.frame-label-detail {
+  opacity: 0.82;
+}
   </style>
 </head>
 
@@ -50,5 +73,16 @@ video {
 {{ else }}
   <img src="{{ .Params.image }}" alt="">
 {{ end }}
+
+
+{{ with .Params.label }}
+<div class="frame-label">
+  <div class="frame-label-title">{{ .title }}</div>
+  {{ with .creator }}<div>{{ . }}</div>{{ end }}
+  {{ with .origin }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+  {{ with .source }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+</div>
+{{ end }}
+
 </body>
 </html>
