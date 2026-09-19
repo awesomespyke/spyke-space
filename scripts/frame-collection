@@ -2,12 +2,7 @@
 
 set -e
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: frame-collection <collection>"
-    exit 1
-fi
-
-COLLECTION="$1"
+COLLECTION="${1:-}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
@@ -15,6 +10,53 @@ FRAME_PAGE="$PROJECT_DIR/content/page/frame.md"
 COLLECTIONS="$PROJECT_DIR/data/frame_collections.yaml"
 
 cd "$PROJECT_DIR"
+
+if [ -z "$COLLECTION" ]; then
+    COLLECTION="$(
+        python3 - "$COLLECTIONS" <<'PY'
+import subprocess
+import sys
+from pathlib import Path
+
+collections_file = Path(sys.argv[1])
+
+names = [
+    line[:-1]
+    for line in collections_file.read_text().splitlines()
+    if line and not line.startswith(" ") and line.endswith(":")
+]
+
+if not names:
+    sys.exit("No Frame collections found.")
+
+display_names = [name.replace("_", " ").title() for name in names]
+
+script = '''
+on run argv
+    set chosen to choose from list argv with title "Put Collection in Frame" with prompt "Choose a collection:" OK button name "Put in Frame" cancel button name "Cancel"
+    if chosen is false then return ""
+    return item 1 of chosen
+end run
+'''
+
+result = subprocess.run(
+    ["osascript", "-e", script, *display_names],
+    capture_output=True,
+    text=True
+)
+
+if result.returncode != 0 or not result.stdout.strip():
+    sys.exit(0)
+
+chosen = result.stdout.strip()
+print(names[display_names.index(chosen)])
+PY
+    )"
+
+    if [ -z "$COLLECTION" ]; then
+        exit 0
+    fi
+fi
 
 if ! grep -q "^${COLLECTION}:" "$COLLECTIONS"; then
     echo "Unknown Frame collection: $COLLECTION"
@@ -56,7 +98,6 @@ for line in lines:
         output.append(line)
 
 if not found:
-    # Insert immediately before the closing front-matter delimiter.
     closing = max(i for i, line in enumerate(output) if line.strip() == "---")
     output.insert(closing, f'collection: "{collection}"')
 
