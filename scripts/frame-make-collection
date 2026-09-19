@@ -12,6 +12,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 FRAME_DIR="$PROJECT_DIR/static/frame"
+COLLECTIONS_DIR="$FRAME_DIR/collections"
 COLLECTIONS="$PROJECT_DIR/data/frame_collections.yaml"
 
 cd "$PROJECT_DIR"
@@ -93,6 +94,9 @@ for FILE in "${FILES[@]}"; do
     fi
 done
 
+COLLECTION_DIR="$COLLECTIONS_DIR/$COLLECTION"
+mkdir -p "$COLLECTION_DIR"
+
 RESIDENTS=()
 
 for FILE in "${FILES[@]}"; do
@@ -112,7 +116,7 @@ print(name)
 PY
     )"
 
-    DESTINATION="$FRAME_DIR/$SAFE_NAME"
+    DESTINATION="$COLLECTION_DIR/$SAFE_NAME"
 
     if [ -e "$DESTINATION" ]; then
         echo "Frame stopped: resident already exists:"
@@ -121,7 +125,7 @@ PY
     fi
 
     cp "$FILE" "$DESTINATION"
-    RESIDENTS+=("$SAFE_NAME")
+    RESIDENTS+=("collections/$COLLECTION/$SAFE_NAME")
 done
 
 python3 - "$COLLECTIONS" "$COLLECTION" "$ORIENTATION" "${RESIDENTS[@]}" <<'PY'
@@ -152,7 +156,7 @@ for resident in residents:
 collections.write_text(text)
 PY
 
-git add data/frame_collections.yaml static/frame/
+git add data/frame_collections.yaml static/frame/collections/
 
 git commit -m "Add Frame collection $COLLECTION"
 git push

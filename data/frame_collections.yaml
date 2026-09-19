@@ -2,13 +2,13 @@ ruysch:
   orientation: "portrait"
   interval: 1200
   residents:
-    - "N-6425-00-000018-wpu.jpg"
-    - "0151_repro.jpg"
-    - "SK-A-2338.jpg"
+    - "collections/ruysch/N-6425-00-000018-wpu.jpg"
+    - "collections/ruysch/0151_repro.jpg"
+    - "collections/ruysch/SK-A-2338.jpg"
 
 bradbury:
   orientation: "portrait"
   interval: 1200
   residents:
-    - "01-the-illustrated-man-9781451678185_xlg.jpg"
-    - "02-halloween_tree.jpeg"
+    - "collections/bradbury/01-the-illustrated-man-9781451678185_xlg.jpg"
+    - "collections/bradbury/02-halloween_tree.jpeg"
