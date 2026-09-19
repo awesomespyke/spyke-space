@@ -101,6 +101,9 @@
 
 <body>
 
+<meta id="frame-version"
+      data-version="{{ .Params.image }}|{{ .Params.collection }}|{{ .Params.type }}|{{ .Params.orientation }}">
+
 {{ if $collection }}
 
   <img id="collection-a" class="collection-image visible" alt="">
@@ -186,7 +189,6 @@
       showResident(indexForTime());
     }, 1000);
 
-    setTimeout(() => location.reload(), 30000);
   </script>
 
 {{ else }}
@@ -210,10 +212,31 @@
   {{ end }}
 
   <script>
-    setTimeout(() => location.reload(), 30000);
   </script>
 
 {{ end }}
+
+<script>
+  const frameVersion =
+    document.getElementById("frame-version").dataset.version;
+
+  setInterval(async () => {
+    try {
+      const response = await fetch("/frame/?check=" + Date.now(), {
+        cache: "no-store"
+      });
+
+      const html = await response.text();
+      const match = html.match(/id="frame-version"\s+data-version="([^"]*)"/);
+
+      if (match && match[1] !== frameVersion) {
+        location.reload();
+      }
+    } catch (_) {
+      // Frame stays exactly as it is if the network disappears.
+    }
+  }, 30000);
+</script>
 
 </body>
 </html>
