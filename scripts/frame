@@ -108,6 +108,8 @@ for line in text.splitlines():
         line = f'orientation: "{orientation}"'
     elif line.startswith("type:"):
         line = f'type: "{media_type}"'
+    elif line.startswith("collection:"):
+        continue
     lines.append(line)
 
 if not any(line.startswith("type:") for line in lines):
