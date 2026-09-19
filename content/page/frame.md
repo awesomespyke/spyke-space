@@ -2,8 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/SAAM-1994.120_1.jpg"
-orientation: "landscape"
+image: "/frame/practical_magic_ver1_xxlg.jpg"
+orientation: "portrait"
 type: "image"
-collection: "ruysch"
 ---
