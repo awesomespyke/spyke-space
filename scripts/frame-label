@@ -1,0 +1,121 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+cd "$PROJECT_DIR"
+
+python3 - "$PROJECT_DIR" <<'PY'
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+project = Path(sys.argv[1])
+frame_page = project / "content/page/frame.md"
+labels_file = project / "data/frame_labels.yaml"
+
+text = frame_page.read_text()
+
+match = re.search(r'^image:\s*["\']?/frame/(.+?)["\']?\s*$', text, re.MULTILINE)
+if not match:
+    sys.exit("Could not determine the current Frame resident.")
+
+filename = match.group(1)
+
+existing = {
+    "title": "",
+    "creator": "",
+    "origin": "",
+    "source": "",
+}
+
+if labels_file.exists():
+    lines = labels_file.read_text().splitlines()
+    current = None
+
+    for line in lines:
+        if line and not line.startswith(" "):
+            current = line[:-1] if line.endswith(":") else None
+        elif current == filename:
+            field = re.match(r'^\s{2}(title|creator|origin|source):\s*"(.*)"\s*$', line)
+            if field:
+                existing[field.group(1)] = field.group(2).replace('\\"', '"').replace('\\\\', '\\')
+
+def ask(label, default):
+    script = '''
+    on run argv
+        set promptText to item 1 of argv
+        set defaultText to item 2 of argv
+        set answer to display dialog promptText default answer defaultText buttons {"Cancel", "OK"} default button "OK"
+        return text returned of answer
+    end run
+    '''
+    result = subprocess.run(
+        ["osascript", "-e", script, label, default],
+        capture_output=True,
+        text=True
+    )
+    if result.returncode != 0:
+        sys.exit(0)
+    return result.stdout.rstrip("\n")
+
+title = ask("Title", existing["title"])
+creator = ask("Creator", existing["creator"])
+origin = ask("Origin · date", existing["origin"])
+source = ask("Source / collection", existing["source"])
+
+def quote(value):
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+records = {}
+order = []
+
+if labels_file.exists():
+    current = None
+    for line in labels_file.read_text().splitlines():
+        if line and not line.startswith(" "):
+            current = line[:-1] if line.endswith(":") else None
+            if current:
+                order.append(current)
+                records[current] = {}
+        elif current:
+            field = re.match(r'^\s{2}(title|creator|origin|source):\s*"(.*)"\s*$', line)
+            if field:
+                records[current][field.group(1)] = field.group(2)
+
+if filename not in records:
+    order.append(filename)
+
+records[filename] = {
+    "title": title,
+    "creator": creator,
+    "origin": origin,
+    "source": source,
+}
+
+output = []
+
+for name in order:
+    output.append(f"{name}:")
+    record = records[name]
+    for field in ("title", "creator", "origin", "source"):
+        output.append(f"  {field}: {quote(record.get(field, ''))}")
+
+labels_file.write_text("\n".join(output) + "\n")
+PY
+
+git add data/frame_labels.yaml
+
+if git diff --cached --quiet; then
+    echo "Label unchanged."
+    exit 0
+fi
+
+git commit -m "Update Frame resident label"
+git push
+
+echo
+echo "Frame label published."
