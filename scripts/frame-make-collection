@@ -1,0 +1,165 @@
+#!/bin/bash
+
+set -e
+
+FOLDER="${1:-}"
+
+if [ -z "$FOLDER" ] || [ ! -d "$FOLDER" ]; then
+    echo "Make Frame Collection needs one folder."
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+FRAME_DIR="$PROJECT_DIR/static/frame"
+COLLECTIONS="$PROJECT_DIR/data/frame_collections.yaml"
+
+cd "$PROJECT_DIR"
+
+UNRELATED_CHANGES="$(git status --porcelain || true)"
+
+if [ -n "$UNRELATED_CHANGES" ]; then
+    echo "Frame stopped: spyke.space has uncommitted changes:"
+    echo "$UNRELATED_CHANGES"
+    echo
+    echo "Commit or resolve those changes first."
+    exit 1
+fi
+
+git pull --rebase
+
+FOLDER_NAME="$(basename "$FOLDER")"
+
+COLLECTION="$(
+    python3 - "$FOLDER_NAME" <<'PY'
+import re
+import sys
+import unicodedata
+
+name = unicodedata.normalize("NFKD", sys.argv[1])
+name = name.encode("ascii", "ignore").decode()
+name = name.lower()
+name = re.sub(r"[^a-z0-9]+", "_", name).strip("_")
+
+if not name:
+    sys.exit("Could not make a collection name from the folder name.")
+
+print(name)
+PY
+)"
+
+if grep -q "^${COLLECTION}:" "$COLLECTIONS"; then
+    echo "Frame collection already exists: $COLLECTION"
+    exit 1
+fi
+
+FILES=()
+
+while IFS= read -r file; do
+    FILES+=("$file")
+done < <(
+    find "$FOLDER" -maxdepth 1 -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
+        -print |
+    sort
+)
+
+if [ "${#FILES[@]}" -eq 0 ]; then
+    echo "No JPG, JPEG, or PNG images found in:"
+    echo "$FOLDER"
+    exit 1
+fi
+
+ORIENTATION=""
+
+for FILE in "${FILES[@]}"; do
+    WIDTH="$(sips -g pixelWidth "$FILE" | awk '/pixelWidth/ {print $2}')"
+    HEIGHT="$(sips -g pixelHeight "$FILE" | awk '/pixelHeight/ {print $2}')"
+
+    if [ "$HEIGHT" -gt "$WIDTH" ]; then
+        THIS_ORIENTATION="portrait"
+    else
+        THIS_ORIENTATION="landscape"
+    fi
+
+    if [ -z "$ORIENTATION" ]; then
+        ORIENTATION="$THIS_ORIENTATION"
+    elif [ "$THIS_ORIENTATION" != "$ORIENTATION" ]; then
+        echo "Frame stopped: collection contains mixed orientations."
+        echo
+        echo "$(basename "$FILE") is $THIS_ORIENTATION."
+        echo "All works in one Frame collection must agree on orientation."
+        exit 1
+    fi
+done
+
+RESIDENTS=()
+
+for FILE in "${FILES[@]}"; do
+    ORIGINAL_NAME="$(basename "$FILE")"
+
+    SAFE_NAME="$(
+        python3 - "$ORIGINAL_NAME" <<'PY'
+import re
+import sys
+import unicodedata
+
+name = unicodedata.normalize("NFKD", sys.argv[1])
+name = name.encode("ascii", "ignore").decode()
+name = re.sub(r"[^A-Za-z0-9._-]+", "_", name)
+
+print(name)
+PY
+    )"
+
+    DESTINATION="$FRAME_DIR/$SAFE_NAME"
+
+    if [ -e "$DESTINATION" ]; then
+        echo "Frame stopped: resident already exists:"
+        echo "$SAFE_NAME"
+        exit 1
+    fi
+
+    cp "$FILE" "$DESTINATION"
+    RESIDENTS+=("$SAFE_NAME")
+done
+
+python3 - "$COLLECTIONS" "$COLLECTION" "$ORIENTATION" "${RESIDENTS[@]}" <<'PY'
+import sys
+from pathlib import Path
+
+collections = Path(sys.argv[1])
+name = sys.argv[2]
+orientation = sys.argv[3]
+residents = sys.argv[4:]
+
+text = collections.read_text()
+
+if text and not text.endswith("\n"):
+    text += "\n"
+
+if text:
+    text += "\n"
+
+text += f"{name}:\n"
+text += f'  orientation: "{orientation}"\n'
+text += "  interval: 1200\n"
+text += "  residents:\n"
+
+for resident in residents:
+    text += f'    - "{resident}"\n'
+
+collections.write_text(text)
+PY
+
+git add data/frame_collections.yaml static/frame/
+
+git commit -m "Add Frame collection $COLLECTION"
+git push
+
+echo
+echo "Frame collection created: $COLLECTION"
+echo "Orientation: $ORIENTATION"
+echo "Residents: ${#RESIDENTS[@]}"
+echo
+echo "Use Put Collection in Frame when you want it to take residence."
