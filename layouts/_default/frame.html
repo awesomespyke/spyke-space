@@ -3,10 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>
-  setTimeout(() => location.reload(), 30000);
-</script>
+
   <title>Frame</title>
+
+  {{ $collection := false }}
+  {{ with .Params.collection }}
+    {{ $collection = index hugo.Data.frame_collections . }}
+  {{ end }}
 
   <style>
     html,
@@ -16,79 +19,200 @@
       margin: 0;
       background: #000;
       overflow: hidden;
-    
-body {
-  position: absolute;
-  {{ if eq .Params.orientation "portrait" }}
-  width: 100vh;
-  height: 100vw;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
-  {{ else }}
-  width: 100%;
-  height: 100%;
-  {{ end }}
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    }
+
+    body {
+      position: absolute;
+
+      {{ if $collection }}
+        {{ if eq $collection.orientation "portrait" }}
+          width: 100vh;
+          height: 100vw;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(90deg);
+        {{ else }}
+          width: 100%;
+          height: 100%;
+        {{ end }}
+      {{ else }}
+        {{ if eq .Params.orientation "portrait" }}
+          width: 100vh;
+          height: 100vw;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(90deg);
+        {{ else }}
+          width: 100%;
+          height: 100%;
+        {{ end }}
+      {{ end }}
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     img,
-video {
+    video {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
-.frame-label {
-  position: absolute;
-  left: 4%;
-  bottom: 4%;
-  max-width: 55%;
-  padding: 18px 22px;
-  background: rgba(0, 0, 0, 0.68);
-  color: rgba(255, 255, 255, 0.95);
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  font-size: 18px;
-  line-height: 1.35;
-}
+    .collection-image {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 3s ease;
+    }
 
-.frame-label-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
+    .collection-image.visible {
+      opacity: 1;
+    }
 
-.frame-label-detail {
-  opacity: 0.82;
-}
+    .frame-label {
+      position: absolute;
+      left: 4%;
+      bottom: 4%;
+      max-width: 55%;
+      padding: 18px 22px;
+      background: rgba(0, 0, 0, 0.68);
+      color: rgba(255, 255, 255, 0.95);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 18px;
+      line-height: 1.35;
+      z-index: 10;
+      transition: opacity 1.5s ease;
+    }
+
+    .frame-label-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .frame-label-detail {
+      opacity: 0.82;
+    }
   </style>
 </head>
 
 <body>
-  {{ if eq .Params.type "video" }}
-  <video src="{{ .Params.image }}" autoplay muted loop playsinline></video>
+
+{{ if $collection }}
+
+  <img id="collection-a" class="collection-image visible" alt="">
+  <img id="collection-b" class="collection-image" alt="">
+
+  <div id="frame-label" class="frame-label">
+    <div id="label-title" class="frame-label-title"></div>
+    <div id="label-creator"></div>
+    <div id="label-origin" class="frame-label-detail"></div>
+    <div id="label-source" class="frame-label-detail"></div>
+  </div>
+
+  <script>
+    const residents = [
+      {{ range $collection.residents }}
+        {
+          image: "/frame/{{ . }}",
+          {{ $label := index hugo.Data.frame_labels . }}
+          title: {{ if $label }}{{ $label.title | jsonify | safeJS }}{{ else }}""{{ end }},
+          creator: {{ if $label }}{{ $label.creator | jsonify | safeJS }}{{ else }}""{{ end }},
+          origin: {{ if $label }}{{ $label.origin | jsonify | safeJS }}{{ else }}""{{ end }},
+          source: {{ if $label }}{{ $label.source | jsonify | safeJS }}{{ else }}""{{ end }}
+        },
+      {{ end }}
+    ];
+
+    const interval = {{ $collection.interval }} * 1000;
+
+    const imageA = document.getElementById("collection-a");
+    const imageB = document.getElementById("collection-b");
+
+    const label = document.getElementById("frame-label");
+    const labelTitle = document.getElementById("label-title");
+    const labelCreator = document.getElementById("label-creator");
+    const labelOrigin = document.getElementById("label-origin");
+    const labelSource = document.getElementById("label-source");
+
+    let visible = imageA;
+    let hidden = imageB;
+    let currentIndex = -1;
+
+    function indexForTime() {
+      return Math.floor(Date.now() / interval) % residents.length;
+    }
+
+    function showLabel(resident) {
+      labelTitle.textContent = resident.title;
+      labelCreator.textContent = resident.creator;
+      labelOrigin.textContent = resident.origin;
+      labelSource.textContent = resident.source;
+
+      label.style.display =
+        resident.title || resident.creator || resident.origin || resident.source
+          ? "block"
+          : "none";
+    }
+
+    function showResident(index, immediate = false) {
+      if (index === currentIndex) return;
+
+      const resident = residents[index];
+
+      hidden.src = resident.image;
+
+      hidden.onload = () => {
+        if (immediate) {
+          visible.classList.remove("visible");
+          hidden.classList.add("visible");
+        } else {
+          hidden.classList.add("visible");
+          visible.classList.remove("visible");
+        }
+
+        [visible, hidden] = [hidden, visible];
+        currentIndex = index;
+        showLabel(resident);
+      };
+    }
+
+    showResident(indexForTime(), true);
+
+    setInterval(() => {
+      showResident(indexForTime());
+    }, 1000);
+
+    setTimeout(() => location.reload(), 30000);
+  </script>
+
 {{ else }}
-  <img src="{{ .Params.image }}" alt="">
-{{ end }}
 
+  {{ if eq .Params.type "video" }}
+    <video src="{{ .Params.image }}" autoplay muted loop playsinline></video>
+  {{ else }}
+    <img src="{{ .Params.image }}" alt="">
+  {{ end }}
 
-{{ $filename := path.Base .Params.image }}
-{{ $label := index hugo.Data.frame_labels $filename }}
+  {{ $filename := path.Base .Params.image }}
+  {{ $label := index hugo.Data.frame_labels $filename }}
 
-{{ if not $label }}
-  {{ $label = .Params.label }}
-{{ end }}
+  {{ with $label }}
+    <div class="frame-label">
+      <div class="frame-label-title">{{ .title }}</div>
+      {{ with .creator }}<div>{{ . }}</div>{{ end }}
+      {{ with .origin }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+      {{ with .source }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+    </div>
+  {{ end }}
 
-{{ with $label }}
-<div class="frame-label">
-  <div class="frame-label-title">{{ .title }}</div>
-  {{ with .creator }}<div>{{ . }}</div>{{ end }}
-  {{ with .origin }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
-  {{ with .source }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
-</div>
+  <script>
+    setTimeout(() => location.reload(), 30000);
+  </script>
+
 {{ end }}
 
 </body>
