@@ -5,4 +5,5 @@ layout: "frame"
 image: "/frame/cheaters.jpg"
 orientation: "portrait"
 type: "image"
+collection: "seascapes"
 ---
