@@ -121,7 +121,8 @@
       {{ range $collection.residents }}
         {
           image: "/frame/{{ . }}",
-          {{ $label := index hugo.Data.frame_labels . }}
+          {{ $filename := path.Base . }}
+          {{ $label := index hugo.Data.frame_labels $filename }}
           title: {{ if $label }}{{ $label.title | jsonify | safeJS }}{{ else }}""{{ end }},
           creator: {{ if $label }}{{ $label.creator | jsonify | safeJS }}{{ else }}""{{ end }},
           origin: {{ if $label }}{{ $label.origin | jsonify | safeJS }}{{ else }}""{{ end }},
