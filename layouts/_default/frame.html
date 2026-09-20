@@ -101,8 +101,10 @@
 
 <body>
 
+{{ $labelsVersion := hugo.Data.frame_labels | jsonify | md5 }}
+
 <meta id="frame-version"
-      data-version="{{ .Params.image }}|{{ .Params.collection }}|{{ .Params.type }}|{{ .Params.orientation }}">
+      data-version="{{ .Params.image }}|{{ .Params.collection }}|{{ .Params.type }}|{{ .Params.orientation }}|{{ $labelsVersion }}">
 
 {{ if $collection }}
 
