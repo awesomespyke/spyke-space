@@ -12,3 +12,11 @@ bradbury:
   residents:
     - "collections/bradbury/01-the-illustrated-man-9781451678185_xlg.jpg"
     - "collections/bradbury/02-halloween_tree.jpeg"
+
+seascapes:
+  orientation: "landscape"
+  interval: 1200
+  residents:
+    - "collections/seascapes/DT1545.jpg"
+    - "collections/seascapes/Ivan_Aivazovsky_-_The_Ninth_Wave_-_WGA00095.jpg"
+    - "collections/seascapes/Turner_-_The_Wreck_Buoy__c.1849__WAG_310.jpg"
