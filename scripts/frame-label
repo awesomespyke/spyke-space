@@ -2,84 +2,39 @@
 
 set -e
 
+FILE="${1:-}"
+
+if [ -z "$FILE" ] || [ ! -f "$FILE" ]; then
+    echo "Label Resident needs one image file."
+    exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+FRAME_DIR="$PROJECT_DIR/static/frame"
 
 cd "$PROJECT_DIR"
 
-python3 - "$PROJECT_DIR" <<'PY'
+case "$FILE" in
+    "$FRAME_DIR"/*) ;;
+    *)
+        echo "Frame stopped: labels can only be added to residents in static/frame."
+        exit 1
+        ;;
+esac
+
+FILENAME="$(basename "$FILE")"
+
+python3 - "$PROJECT_DIR" "$FILENAME" <<'PY'
 import re
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 project = Path(sys.argv[1])
+filename = sys.argv[2]
 
-frame_page = project / "content/page/frame.md"
 labels_file = project / "data/frame_labels.yaml"
-collections_file = project / "data/frame_collections.yaml"
-
-text = frame_page.read_text()
-
-# Determine what is actually visible in Frame.
-collection_match = re.search(
-    r'^collection:\s*["\']?(.+?)["\']?\s*$',
-    text,
-    re.MULTILINE,
-)
-
-if collection_match:
-    collection_name = collection_match.group(1)
-
-    lines = collections_file.read_text().splitlines()
-    in_collection = False
-    in_residents = False
-    interval = None
-    residents = []
-
-    for line in lines:
-        if line and not line.startswith(" "):
-            if in_collection:
-                break
-            in_collection = line == f"{collection_name}:"
-            in_residents = False
-            continue
-
-        if not in_collection:
-            continue
-
-        interval_match = re.match(r'^\s{2}interval:\s*(\d+)\s*$', line)
-        if interval_match:
-            interval = int(interval_match.group(1))
-            continue
-
-        if re.match(r'^\s{2}residents:\s*$', line):
-            in_residents = True
-            continue
-
-        if in_residents:
-            resident_match = re.match(r'^\s{4}-\s*["\']?(.+?)["\']?\s*$', line)
-            if resident_match:
-                residents.append(resident_match.group(1))
-
-    if interval is None or not residents:
-        sys.exit(f"Could not determine the current resident in collection: {collection_name}")
-
-    index = int(time.time() // interval) % len(residents)
-    filename = Path(residents[index]).name
-
-else:
-    image_match = re.search(
-        r'^image:\s*["\']?/frame/(.+?)["\']?\s*$',
-        text,
-        re.MULTILINE,
-    )
-
-    if not image_match:
-        sys.exit("Could not determine the current Frame resident.")
-
-    filename = Path(image_match.group(1)).name
 
 existing = {
     "title": "",
