@@ -20,3 +20,12 @@ seascapes:
     - "collections/seascapes/DT1545.jpg"
     - "collections/seascapes/Ivan_Aivazovsky_-_The_Ninth_Wave_-_WGA00095.jpg"
     - "collections/seascapes/Turner_-_The_Wreck_Buoy__c.1849__WAG_310.jpg"
+
+night:
+  orientation: "landscape"
+  interval: 1200
+  residents:
+    - "collections/night/DP-1740-001_cropped.jpg"
+    - "collections/night/moonlight_2014.136.20.jpg"
+    - "collections/night/moonlit_landscape_with_bridge_1990.6.1.jpg"
+    - "collections/night/nocturne_1943.3.8664.jpg"
