@@ -98,6 +98,13 @@
     .frame-label-detail {
       opacity: 0.82;
     }
+
+    .frame-label-description {
+      margin: 10px 0;
+      max-width: 42em;
+      font-style: italic;
+      opacity: 0.9;
+    }
   </style>
 <script type="module"
         src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"></script>
@@ -118,7 +125,8 @@
   <div id="frame-label" class="frame-label">
     <div id="label-title" class="frame-label-title"></div>
     <div id="label-creator"></div>
-    <div id="label-origin" class="frame-label-detail"></div>
+    <div id="label-context" class="frame-label-detail"></div>
+    <div id="label-description" class="frame-label-description"></div>
     <div id="label-source" class="frame-label-detail"></div>
   </div>
 
@@ -130,8 +138,8 @@
           {{ $filename := path.Base . }}
           {{ $label := index hugo.Data.frame_labels $filename }}
           title: {{ if $label }}{{ $label.title | jsonify | safeJS }}{{ else }}""{{ end }},
-          creator: {{ if $label }}{{ $label.creator | jsonify | safeJS }}{{ else }}""{{ end }},
-          origin: {{ if $label }}{{ $label.origin | jsonify | safeJS }}{{ else }}""{{ end }},
+          context: {{ if $label }}{{ $label.context | jsonify | safeJS }}{{ else }}""{{ end }},
+          description: {{ if $label }}{{ $label.description | jsonify | safeJS }}{{ else }}""{{ end }},
           source: {{ if $label }}{{ $label.source | jsonify | safeJS }}{{ else }}""{{ end }}
         },
       {{ end }}
@@ -145,7 +153,8 @@
     const label = document.getElementById("frame-label");
     const labelTitle = document.getElementById("label-title");
     const labelCreator = document.getElementById("label-creator");
-    const labelOrigin = document.getElementById("label-origin");
+    const labelContext = document.getElementById("label-context");
+    const labelDescription = document.getElementById("label-description");
     const labelSource = document.getElementById("label-source");
 
     let visible = imageA;
@@ -159,11 +168,11 @@
     function showLabel(resident) {
       labelTitle.textContent = resident.title;
       labelCreator.textContent = resident.creator;
-      labelOrigin.textContent = resident.origin;
+      labelContext.textContent = resident.context;
       labelSource.textContent = resident.source;
 
       label.style.display =
-        resident.title || resident.creator || resident.origin || resident.source
+        resident.title || resident.creator || resident.context || resident.description || resident.source
           ? "block"
           : "none";
     }
@@ -230,7 +239,8 @@
     <div class="frame-label">
       <div class="frame-label-title">{{ .title }}</div>
       {{ with .creator }}<div>{{ . }}</div>{{ end }}
-      {{ with .origin }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+      {{ with .context }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
+      {{ with .description }}<div class="frame-label-description">{{ . }}</div>{{ end }}
       {{ with .source }}<div class="frame-label-detail">{{ . }}</div>{{ end }}
     </div>
   {{ end }}

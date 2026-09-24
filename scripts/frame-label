@@ -39,8 +39,9 @@ labels_file = project / "data/frame_labels.yaml"
 existing = {
     "title": "",
     "creator": "",
-    "origin": "",
+    "context": "",
     "source": "",
+    "description": "",
 }
 
 if labels_file.exists():
@@ -52,7 +53,7 @@ if labels_file.exists():
             current = line[:-1] if line.endswith(":") else None
         elif current == filename:
             field = re.match(
-                r'^\s{2}(title|creator|origin|source):\s*"(.*)"\s*$',
+                r'^\s{2}(title|creator|context|source|description):\s*"(.*)"\s*$',
                 line,
             )
             if field:
@@ -85,8 +86,9 @@ def ask(label, default):
 
 title = ask("Title", existing["title"])
 creator = ask("Creator", existing["creator"])
-origin = ask("Origin · date", existing["origin"])
+context = ask("Context", existing["context"])
 source = ask("Source / collection", existing["source"])
+description = ask("Item description", existing["description"])
 
 def quote(value):
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
@@ -107,7 +109,7 @@ if labels_file.exists():
 
         elif current:
             field = re.match(
-                r'^\s{2}(title|creator|origin|source):\s*"(.*)"\s*$',
+                r'^\s{2}(title|creator|context|source|description):\s*"(.*)"\s*$',
                 line,
             )
 
@@ -120,7 +122,8 @@ if filename not in records:
 records[filename] = {
     "title": title,
     "creator": creator,
-    "origin": origin,
+    "context": context,
+    "description": description,
     "source": source,
 }
 
@@ -130,7 +133,7 @@ for name in order:
     output.append(f"{name}:")
     record = records[name]
 
-    for field in ("title", "creator", "origin", "source"):
+    for field in ("title", "creator", "context", "description", "source"):
         output.append(f"  {field}: {quote(record.get(field, ''))}")
 
 labels_file.write_text("\n".join(output) + "\n")
