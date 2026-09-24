@@ -2,8 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/eluykjusd0ch1.jpeg"
-orientation: "portrait"
-type: "image"
-collection: "night"
+image: "/frame/f1961_33-combined-100k-2048_std_draco.glb"
+orientation: "landscape"
+type: "model"
 ---
