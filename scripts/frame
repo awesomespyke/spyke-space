@@ -71,18 +71,28 @@ if [ "$(cd "$(dirname "$MEDIA")" && pwd)/$(basename "$MEDIA")" != "$DESTINATION"
     fi
 fi
 
-if [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
+if [[ "$EXTENSION" == "glb" ]]; then
+    ORIENTATION="landscape"
+
+elif [[ "$EXTENSION" == "mp4" || "$EXTENSION" == "mov" ]]; then
     WIDTH="$(/opt/homebrew/bin/ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$DESTINATION")"
     HEIGHT="$(/opt/homebrew/bin/ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$DESTINATION")"
+
+    if [ "$HEIGHT" -gt "$WIDTH" ]; then
+        ORIENTATION="portrait"
+    else
+        ORIENTATION="landscape"
+    fi
+
 else
     WIDTH="$(sips -g pixelWidth "$DESTINATION" | awk '/pixelWidth/ {print $2}')"
     HEIGHT="$(sips -g pixelHeight "$DESTINATION" | awk '/pixelHeight/ {print $2}')"
-fi
 
-if [ "$HEIGHT" -gt "$WIDTH" ]; then
-    ORIENTATION="portrait"
-else
-    ORIENTATION="landscape"
+    if [ "$HEIGHT" -gt "$WIDTH" ]; then
+        ORIENTATION="portrait"
+    else
+        ORIENTATION="landscape"
+    fi
 fi
 
 FRAME_PAGE="$PROJECT_DIR/content/page/frame.md"
@@ -96,7 +106,12 @@ filename = sys.argv[2]
 orientation = sys.argv[3]
 extension = sys.argv[4]
 
-media_type = "video" if extension in ("mp4", "mov") else "image"
+if extension in ("mp4", "mov"):
+    media_type = "video"
+elif extension == "glb":
+    media_type = "model"
+else:
+    media_type = "image"
 
 text = page.read_text()
 
