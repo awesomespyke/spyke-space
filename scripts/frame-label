@@ -5,13 +5,15 @@ set -e
 FILE="${1:-}"
 
 if [ -z "$FILE" ] || [ ! -f "$FILE" ]; then
-    echo "Label Resident needs one image file."
+    echo "Label Resident needs one work."
     exit 1
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 FRAME_DIR="$PROJECT_DIR/static/frame"
+
+FILE="$(cd "$(dirname "$FILE")" && pwd)/$(basename "$FILE")"
 
 cd "$PROJECT_DIR"
 
