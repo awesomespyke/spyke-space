@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/f1961_33-combined-100k-2048_std_draco.glb"
-orientation: "landscape"
-type: "model"
+image: "/frame/MV5BM2ViMTkwNzItMzRiYy00MmFmLThkNzQtZTMwYWNiYzk0MzIwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+orientation: "portrait"
+type: "image"
 ---
