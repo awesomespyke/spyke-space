@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/MV5BM2ViMTkwNzItMzRiYy00MmFmLThkNzQtZTMwYWNiYzk0MzIwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
-orientation: "portrait"
+image: "/frame/default-2.jpg"
+orientation: "landscape"
 type: "image"
 ---
