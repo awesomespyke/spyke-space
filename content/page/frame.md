@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/Francisco_de_Goya_y_Lucientes_-_Witches_Sabbath_-_Google_Art_Project.jpg"
+image: "/frame/skiska.jpeg"
 orientation: "portrait"
 type: "image"
 ---
