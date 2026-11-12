@@ -25,3 +25,75 @@
 .spyke-gallery--lightbox-open{overflow:hidden}
 @media(max-width:650px){.spyke-gallery__body{padding:15px 9px 28px}.spyke-gallery__mosaic{columns:2 140px;column-gap:8px}.spyke-gallery__tile{margin-bottom:8px}.spyke-lightbox__stage img{max-width:calc(100% - 70px)}.spyke-lightbox__control{min-width:32px;min-height:36px}.spyke-lightbox__bottom{font-size:.78rem}}
 @media(prefers-reduced-motion:reduce){.spyke-gallery__tile img{transition:none}.spyke-gallery__tile:hover img{transform:none}}
+
+/* Gallery lightbox — follow the Messages appearance scheme. */
+.spyke-lightbox {
+  color: var(--chat-ink);
+}
+
+.spyke-lightbox__backdrop {
+  background: rgba(244, 247, 252, .98);
+}
+
+.spyke-lightbox__bottom {
+  color: var(--chat-muted);
+}
+
+.spyke-lightbox__bottom a {
+  color: var(--chat-accent);
+}
+
+.spyke-lightbox__control {
+  border-color: var(--chat-line);
+}
+
+.spyke-lightbox__control:focus-visible {
+  outline-color: var(--chat-accent);
+}
+
+html[data-scheme="dark"] .spyke-lightbox,
+body[data-scheme="dark"] .spyke-lightbox {
+  color: #edf4ff;
+}
+
+html[data-scheme="dark"] .spyke-lightbox__backdrop,
+body[data-scheme="dark"] .spyke-lightbox__backdrop {
+  background: rgba(10, 16, 26, .97);
+}
+
+html[data-scheme="dark"] .spyke-lightbox__bottom,
+body[data-scheme="dark"] .spyke-lightbox__bottom {
+  color: #b4c4dc;
+}
+
+html[data-scheme="dark"] .spyke-lightbox__bottom a,
+body[data-scheme="dark"] .spyke-lightbox__bottom a {
+  color: #9dc4ff;
+}
+
+html[data-scheme="dark"] .spyke-lightbox__control,
+body[data-scheme="dark"] .spyke-lightbox__control {
+  border-color: rgba(200, 220, 255, .15);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-scheme]) .spyke-lightbox {
+    color: #edf4ff;
+  }
+
+  html:not([data-scheme]) .spyke-lightbox__backdrop {
+    background: rgba(10, 16, 26, .97);
+  }
+
+  html:not([data-scheme]) .spyke-lightbox__bottom {
+    color: #b4c4dc;
+  }
+
+  html:not([data-scheme]) .spyke-lightbox__bottom a {
+    color: #9dc4ff;
+  }
+
+  html:not([data-scheme]) .spyke-lightbox__control {
+    border-color: rgba(200, 220, 255, .15);
+  }
+}
