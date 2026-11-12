@@ -1,0 +1,39 @@
+/* Dedicated message presentation; no changes to the Telegram publishing pipeline. */
+body:has(.spyke-chat) .left-sidebar,
+body:has(.spyke-chat) .right-sidebar { display: none !important; }
+body:has(.spyke-chat) .main-container { display: block !important; max-width: 100% !important; width: 100% !important; }
+body:has(.spyke-chat) .main-container > main,
+body:has(.spyke-chat) .main-container > .main { max-width: 100% !important; min-width: 0 !important; width: 100% !important; }
+body:has(.spyke-chat) .main-container .main > * { min-width: 0; }
+.spyke-chat { --chat-accent:#729e8d; --chat-bubble:#263c37; --chat-ink:#f1f4f2; --chat-muted:#a9c0b7; color:var(--chat-ink); background:linear-gradient(160deg,#121e20,#172427); width:min(100%, 900px); min-height:70vh; margin:0 auto 3rem; border-radius:22px; overflow:hidden; box-shadow:0 12px 50px rgba(0,0,0,.12); font-size:16px; }
+.spyke-chat * { box-sizing:border-box; }
+.spyke-chat__header { position:relative; display:flex; align-items:center; gap:12px; padding:18px clamp(16px,4vw,32px); border-bottom:1px solid rgba(255,255,255,.10); background:#18282a; }
+.spyke-chat__header h1 { margin:0; font-size:1.15rem; line-height:1.3; color:var(--chat-ink); }
+.spyke-chat__header p { margin:3px 0 0; font-size:.78rem; color:var(--chat-muted); }
+.spyke-chat__signal { display:grid; place-items:center; flex:none; width:40px; height:40px; border-radius:50%; background:#2b5046; color:#c9e6d9; }
+.spyke-chat__thread { display:flex; flex-direction:column; gap:11px; padding:24px clamp(12px,4vw,36px) 44px; }
+.spyke-chat__date { align-self:center; margin:12px 0 7px; padding:5px 13px; border-radius:999px; background:rgba(255,255,255,.09); color:#c7d6d1; font-size:.75rem; }
+.spyke-chat__message { display:flex; justify-content:flex-end; min-width:0; margin:0; }
+.spyke-chat__bubble { max-width:min(78%, 440px); min-width:0; width:fit-content; background:var(--chat-bubble); border:1px solid rgba(255,255,255,.09); border-radius:18px 18px 5px 18px; padding:10px 12px 7px; overflow:hidden; overflow-wrap:anywhere; box-shadow:0 2px 8px rgba(0,0,0,.10); }
+.spyke-chat__content { color:var(--chat-ink); line-height:1.48; }
+.spyke-chat__content > :first-child { margin-top:0; }
+.spyke-chat__content > :last-child { margin-bottom:0; }
+.spyke-chat__content p { margin:.4em 0; }
+.spyke-chat__content img { display:block; width:auto; max-width:100%; max-height:340px; object-fit:contain; border-radius:11px; cursor:zoom-in; }
+.spyke-chat__content video { display:block; width:100%; max-width:390px; max-height:300px; border-radius:11px; background:#0b1416; }
+.spyke-chat__content audio { display:block; width:100%; min-width:0; max-width:320px; height:46px; }
+.spyke-chat__content p:has(img) { margin:5px 0; }
+/* Multiple photographs in a single Telegram album remain one bubble, in a compact grid. */
+.spyke-chat__content:has(img + img) { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+.spyke-chat__content:has(img + img) img { width:100%; height:145px; object-fit:cover; }
+.spyke-chat__content:has(p > img):has(p ~ p > img) { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+.spyke-chat__content:has(p > img):has(p ~ p > img) p:has(img) { margin:0; }
+.spyke-chat__content:has(p > img):has(p ~ p > img) img { width:100%; height:145px; object-fit:cover; }
+.spyke-chat__content:has(p > img):has(p ~ p > img) p:not(:has(img)) { grid-column:1/-1; }
+.spyke-chat__meta { display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:5px; font-size:.67rem; color:var(--chat-muted); }
+.spyke-chat__meta a { color:var(--chat-muted); text-decoration:none; opacity:.7; }
+.spyke-chat__meta a:hover { opacity:1; }
+.spyke-chat__end,.spyke-chat__empty { text-align:center; padding:12px 18px 24px; font-size:.76rem; color:var(--chat-muted); }
+.spyke-chat__back { color:#d1e9dd; font-size:.9rem; text-decoration:none; }
+@media(max-width:600px) { .spyke-chat { width:100%; min-height:75vh; border-radius:0; margin:0; box-shadow:none; } .spyke-chat__thread { padding:16px 12px 32px; } .spyke-chat__bubble { max-width:88%; padding:9px 10px 6px; } .spyke-chat__content img { max-height:260px; } .spyke-chat__content video { max-height:250px; } .spyke-chat__content:has(p > img):has(p ~ p > img) img { height:110px; } }
+@media(prefers-reduced-motion:reduce) { .spyke-chat * { scroll-behavior:auto; } }

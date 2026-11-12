@@ -1,8 +1,10 @@
 {{ define "main" }}
-<article style="max-width:760px;margin:1.5rem auto;padding:1.5rem;border-radius:18px;background:var(--card-background,rgba(128,128,128,.07));overflow-wrap:anywhere">
-  <p><a href="{{ "transmissions/" | relURL }}">← All transmissions</a></p>
-  <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" style="display:block;opacity:.65;margin-bottom:1rem">{{ .Date.Format "Jan 2, 2006 · 3:04 PM MST" }}</time>
-  <div class="transmission-body">{{ .Content }}</div>
-</article>
-<style>.transmission-body img,.transmission-body video,.transmission-body audio{max-width:100%;height:auto;border-radius:12px}</style>
+<link rel="stylesheet" href="{{ "css/spyke-transmissions.css" | relURL }}">
+<main class="spyke-chat spyke-chat--single" aria-label="SpykeSpace transmission">
+  <header class="spyke-chat__header"><a class="spyke-chat__back" href="{{ "transmissions/" | relURL }}">← Transmissions</a></header>
+  <div class="spyke-chat__thread">
+    <div class="spyke-chat__date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time></div>
+    <article class="spyke-chat__message"><div class="spyke-chat__bubble"><div class="spyke-chat__content">{{ .Content }}</div><footer class="spyke-chat__meta"><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "3:04 PM" }} UTC</time></footer></div></article>
+  </div>
+</main>
 {{ end }}

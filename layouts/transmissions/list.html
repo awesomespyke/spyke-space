@@ -1,13 +1,29 @@
 {{ define "main" }}
-<section class="transmission-stream" style="max-width:760px;margin:0 auto;padding:1.5rem 0 4rem">
-  <header style="margin-bottom:2rem"><h1 style="font-size:2rem;margin:0 0 .35rem">Transmissions</h1><p style="opacity:.7;margin:0">Notes and moments, as they arrive.</p></header>
-  {{ $pages := .Pages.ByDate.Reverse }}
-  {{ range $pages }}
-    <article style="margin:0 0 1.25rem;padding:1.4rem;border-radius:18px;background:var(--card-background,rgba(128,128,128,.07));overflow-wrap:anywhere">
-      <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" style="display:block;font-size:.8rem;opacity:.65;margin-bottom:.8rem">{{ .Date.Format "Jan 2, 2006 · 3:04 PM MST" }}</time>
-      <div class="transmission-body">{{ .Content }}</div>
-    </article>
-  {{ else }}<p>No transmissions yet.</p>{{ end }}
-</section>
-<style>.transmission-body p{margin:.6em 0}.transmission-body img{max-width:100%;height:auto;border-radius:12px}.transmission-body video,.transmission-body audio{max-width:100%}.transmission-body p:has(img){margin:1rem 0}</style>
+<link rel="stylesheet" href="{{ "css/spyke-transmissions.css" | relURL }}">
+<main class="spyke-chat" aria-label="SpykeSpace transmissions">
+  <header class="spyke-chat__header">
+    <span class="spyke-chat__signal" aria-hidden="true">◉</span>
+    <div><h1>Transmissions</h1><p>Messages from SpykeSpace</p></div>
+  </header>
+  <div class="spyke-chat__thread" aria-label="Message history">
+    {{ $pages := .RegularPages.ByDate }}
+    {{ range $i, $page := $pages }}
+      {{ $date := $page.Date.Format "2006-01-02" }}
+      {{ $previous := "" }}
+      {{ if gt $i 0 }}{{ $previous = (index $pages (sub $i 1)).Date.Format "2006-01-02" }}{{ end }}
+      {{ if ne $date $previous }}
+      <div class="spyke-chat__date"><time datetime="{{ $date }}">{{ $page.Date.Format "January 2, 2006" }}</time></div>
+      {{ end }}
+      <article class="spyke-chat__message" id="{{ $page.File.ContentBaseName }}">
+        <div class="spyke-chat__bubble">
+          <div class="spyke-chat__content">{{ $page.Content }}</div>
+          <footer class="spyke-chat__meta"><time datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "3:04 PM" }} UTC</time><a href="{{ $page.RelPermalink }}" aria-label="Permalink to message from {{ $page.Date.Format "January 2, 2006 at 3:04 PM" }}">#</a></footer>
+        </div>
+      </article>
+    {{ else }}
+      <p class="spyke-chat__empty">Nothing transmitted yet.</p>
+    {{ end }}
+  </div>
+  <footer class="spyke-chat__end" aria-label="End of transmissions">End of transmissions</footer>
+</main>
 {{ end }}
