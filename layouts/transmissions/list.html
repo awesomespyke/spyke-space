@@ -1,29 +1,3 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "css/spyke-transmissions.css" | relURL }}">
-<main class="spyke-chat" aria-label="SpykeSpace transmissions">
-  <header class="spyke-chat__header">
-    <span class="spyke-chat__signal" aria-hidden="true">◉</span>
-    <div><h1>Transmissions</h1><p>Messages from SpykeSpace</p></div>
-  </header>
-  <div class="spyke-chat__thread" aria-label="Message history">
-    {{ $pages := .RegularPages.ByDate }}
-    {{ range $i, $page := $pages }}
-      {{ $date := $page.Date.Format "2006-01-02" }}
-      {{ $previous := "" }}
-      {{ if gt $i 0 }}{{ $previous = (index $pages (sub $i 1)).Date.Format "2006-01-02" }}{{ end }}
-      {{ if ne $date $previous }}
-      <div class="spyke-chat__date"><time datetime="{{ $date }}">{{ $page.Date.Format "January 2, 2006" }}</time></div>
-      {{ end }}
-      <article class="spyke-chat__message" id="{{ $page.File.ContentBaseName }}">
-        <div class="spyke-chat__bubble">
-          <div class="spyke-chat__content">{{ $page.Content }}</div>
-          <footer class="spyke-chat__meta"><time datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "3:04 PM" }} UTC</time><a href="{{ $page.RelPermalink }}" aria-label="Permalink to message from {{ $page.Date.Format "January 2, 2006 at 3:04 PM" }}">#</a></footer>
-        </div>
-      </article>
-    {{ else }}
-      <p class="spyke-chat__empty">Nothing transmitted yet.</p>
-    {{ end }}
-  </div>
-  <footer class="spyke-chat__end" aria-label="End of transmissions">End of transmissions</footer>
-</main>
+  {{ partial "spyke/messages.html" . }}
 {{ end }}

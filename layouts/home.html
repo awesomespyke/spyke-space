@@ -1,22 +1,3 @@
-{{ define "body-class" }}
-    article-page
-{{ end }}
-
 {{ define "main" }}
-
-    {{ partial "currently-listening.html" . }}
-
-    <section class="article-list">
-        <h2>Field Notes</h2>
-
-        {{ range first 4 (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
-            {{ partial "article-list/compact" . }}
-        {{ end }}
-    </section>
-
-    {{ partialCached "footer/footer" . }}
-
-{{ end }}
-
-{{ define "right-sidebar" }}
+  {{ partial "spyke/messages.html" . }}
 {{ end }}

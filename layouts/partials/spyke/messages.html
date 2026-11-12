@@ -1,0 +1,30 @@
+{{ $pages := where .Site.RegularPages "Section" "transmissions" }}
+{{ $pages = $pages.ByDate }}
+<link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
+<main class="spyke-chat" aria-label="SpykeSpace Messages">
+  <header class="spyke-chat__header">
+    <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong><span>Messages</span></a>
+    <nav class="spyke-chat__nav" aria-label="SpykeSpace destinations">
+      <a href="{{ .Site.Home.RelPermalink }}" aria-current="page">Messages</a>
+      <a href="https://library.spyke.space/">Library</a>
+      <a href="{{ "posts/" | relURL }}">Essays</a>
+    </nav>
+    <button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button>
+  </header>
+  <div class="spyke-chat__thread" id="message-history" aria-label="Message history">
+    {{ range $i, $page := $pages }}
+      {{ $date := $page.Date.Format "2006-01-02" }}
+      {{ $previous := "" }}
+      {{ if gt $i 0 }}{{ $previous = (index $pages (sub $i 1)).Date.Format "2006-01-02" }}{{ end }}
+      {{ if ne $date $previous }}<div class="spyke-chat__date"><time datetime="{{ $date }}">{{ $page.Date.Format "January 2, 2006" }}</time></div>{{ end }}
+      <article class="spyke-chat__message" id="{{ $page.File.ContentBaseName }}">
+        <div class="spyke-chat__bubble{{ if in $page.RawContent "![" }} spyke-chat__bubble--media{{ end }}">
+          <div class="spyke-chat__content">{{ $page.Content }}</div>
+          <footer class="spyke-chat__meta"><time datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "3:04 PM" }} UTC</time><a href="{{ $page.RelPermalink }}" aria-label="Permalink to this message">#</a></footer>
+        </div>
+      </article>
+    {{ else }}<p class="spyke-chat__empty">Nothing shared yet.</p>{{ end }}
+  </div>
+  <div id="latest-message" aria-hidden="true"></div>
+</main>
+<script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
