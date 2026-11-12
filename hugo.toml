@@ -13,10 +13,6 @@ category = "categories"
 
 
 
-[[menu.main]]
-name = "Posts"
-url = "/posts/"
-weight = 20
 
 [[menu.main]]
 name = "About Me"
