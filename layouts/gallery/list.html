@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{ $photos := slice }}
+{{ range where .Site.RegularPages "Section" "transmissions" }}
+  {{ $page := . }}
+  {{ with .Params.spyke_media }}
+    {{ range . }}
+      {{ $filename := printf "%v" . }}
+      {{ $ext := lower (path.Ext $filename) }}
+      {{ if in (slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".avif") $ext }}
+        {{ $photos = $photos | append (dict "src" (printf "/transmissions/%s" $filename | relURL) "page" $page.RelPermalink "date" $page.Date "title" $page.Title) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $photos = sort $photos "date" "desc" }}
+<link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
+<main class="spyke-chat spyke-gallery" aria-label="SpykeSpace Gallery">
+  <header class="spyke-chat__header">
+    <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong><span>Gallery</span></a>
+    <nav class="spyke-chat__nav" aria-label="SpykeSpace destinations">
+      <a href="{{ .Site.Home.RelPermalink }}">Messages</a>
+      <a href="{{ "gallery/" | relURL }}" aria-current="page">Gallery</a>
+      <a href="https://library.spyke.space/">Library</a>
+      <a href="{{ "posts/" | relURL }}">Essays</a>
+    </nav>
+    <button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button>
+  </header>
+  <section class="spyke-gallery__body" aria-labelledby="spyke-gallery-heading">
+    <header class="spyke-gallery__intro"><h1 id="spyke-gallery-heading">Gallery</h1><p>Photographs from Transmissions.</p></header>
+    {{ if gt (len $photos) 0 }}
+      <div class="spyke-gallery__mosaic" id="spyke-gallery-mosaic">
+        {{ range $index, $photo := $photos }}
+          <button class="spyke-gallery__tile" type="button" data-gallery-index="{{ $index }}" data-src="{{ $photo.src }}" data-source="{{ $photo.page }}" data-caption="{{ $photo.title }}" aria-label="Open photograph {{ add $index 1 }} of {{ len $photos }} from {{ $photo.title }}">
+            <img src="{{ $photo.src }}" alt="Photograph from {{ $photo.title }}" loading="lazy" decoding="async">
+          </button>
+        {{ end }}
+      </div>
+    {{ else }}
+      <p class="spyke-gallery__empty">No photographs yet. Images published through Transmissions will appear here.</p>
+    {{ end }}
+  </section>
+</main>
+<div class="spyke-lightbox" id="spyke-lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer" hidden>
+  <div class="spyke-lightbox__backdrop" data-gallery-close></div>
+  <div class="spyke-lightbox__content">
+    <div class="spyke-lightbox__top"><span id="spyke-lightbox-count" aria-live="polite"></span><button type="button" class="spyke-lightbox__control" id="spyke-lightbox-close" aria-label="Close photograph viewer">×</button></div>
+    <div class="spyke-lightbox__stage"><button type="button" class="spyke-lightbox__control spyke-lightbox__arrow" id="spyke-lightbox-prev" aria-label="Previous photograph">‹</button><img id="spyke-lightbox-image" alt=""><button type="button" class="spyke-lightbox__control spyke-lightbox__arrow" id="spyke-lightbox-next" aria-label="Next photograph">›</button></div>
+    <div class="spyke-lightbox__bottom"><span id="spyke-lightbox-caption"></span><a id="spyke-lightbox-source" href="#">View original message ↗</a></div>
+  </div>
+</div>
+<script defer src="{{ "js/spyke-gallery.js" | relURL }}"></script>
+{{ end }}
