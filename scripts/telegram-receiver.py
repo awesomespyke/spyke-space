@@ -14,6 +14,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from lifecycle import decorate, plan_delete, frontmatter, inventory, media_refs
+from link_preview import preview
 import secrets
 from album_journal import Journal
 from tombstones import Tombstones
@@ -139,6 +140,25 @@ def render_item(kind, url):
         return '{{< transmission-audio src="' + url + '" >}}'
     return '{{< transmission-video src="' + url + '" >}}'
 
+
+def link_card(captions):
+    """Create one optional rich preview without changing original message text."""
+    text = '\n'.join(captions)
+    match = re.search(r'https://[^\s<>"\x27]+', text)
+    if not match:
+        return None
+
+    url = match.group(0).rstrip('.,;:!?)]}')
+    metadata = preview(url)
+    if not metadata:
+        return None
+
+    fields = ['url', 'title', 'description', 'image']
+    arguments = [
+        key + '=' + quote_toml(metadata[key])
+        for key in fields if metadata.get(key)
+    ]
+    return '{{< transmission-link ' + ' '.join(arguments) + ' >}}'
 
 def find_existing_album(chat_id, group):
     """Find the canonical album regardless of the timestamp of a late member."""
@@ -266,7 +286,8 @@ def publish(token, messages):
             f'title = {quote_toml("Transmission " + str(first["message_id"]))}',
             'draft = false', '+++', '',
         ]
-        body = '\n\n'.join(captions + blocks)
+        card = link_card(captions)
+        body = '\n\n'.join(captions + blocks + ([card] if card else []))
         destination.write_text(decorate(destination, '\n'.join(front) + body + '\n',
                                         message_ids=[m['message_id'] for m in messages]), encoding='utf-8')
         run('hugo', '--gc', '--minify')
@@ -458,7 +479,7 @@ def process_staged(token, journal, now=None):
         journal.mark_done(members)
         try:
             tell(token, message['chat']['id'],
-                 '📡 Transmission submitted to SpykeSpace.' if status == 'published'
+                 'ðŸ“¡ Transmission submitted to SpykeSpace.' if status == 'published'
                  else 'This transmission was deleted.' if status == 'deleted'
                  else 'This transmission already exists.')
         except Exception as exc:
@@ -511,3 +532,4 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print('\nReceiver stopped.')
+

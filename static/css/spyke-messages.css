@@ -73,3 +73,116 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
     min-height: 76px;
   }
 }
+
+/* SpykeSpace rich link cards */
+.spyke-link {
+  display: block;
+  position: relative;
+  width: min(100%, 540px);
+  margin: 12px 0;
+  overflow: hidden;
+  border: 1px solid var(--chat-line);
+  border-radius: 16px;
+  background: var(--chat-header);
+  color: var(--chat-ink);
+  text-decoration: none;
+  transition: box-shadow 250ms ease, transform 250ms ease;
+}
+
+.spyke-link__image {
+  display: block;
+  width: 100%;
+  height: clamp(150px, 25vw, 260px);
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.spyke-link__details {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 15px 17px;
+}
+
+.spyke-link__domain {
+  color: var(--chat-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.spyke-link__title {
+  color: var(--chat-ink);
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.spyke-link__description {
+  color: var(--chat-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.spyke-link:hover,
+.spyke-link:focus-visible {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow:
+    0 0 0 1px rgba(164,140,229,.65),
+    0 0 0 3px rgba(131,214,201,.18),
+    0 8px 24px rgba(86,143,215,.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spyke-link {
+    transition: none;
+  }
+
+  .spyke-link:hover,
+  .spyke-link:focus-visible {
+    transform: none;
+  }
+}
+
+/* Rich link card: iridescent edge */
+.spyke-link {
+  isolation: isolate;
+  overflow: visible;
+  border-color: transparent;
+}
+
+.spyke-link::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: 18px;
+  background: linear-gradient(
+    115deg,
+    #568fd7,
+    #a48ce5,
+    #e9a5cf,
+    #83d6c9,
+    #568fd7
+  );
+  background-size: 250% 250%;
+  opacity: 0;
+  transition: opacity 300ms ease, background-position 900ms ease;
+}
+
+.spyke-link:hover::before,
+.spyke-link:focus-visible::before {
+  opacity: 1;
+  background-position: 100% 50%;
+}
+
+.spyke-link:hover,
+.spyke-link:focus-visible {
+  box-shadow: 0 8px 28px rgba(86,143,215,.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spyke-link::before {
+    transition: none;
+  }
+}

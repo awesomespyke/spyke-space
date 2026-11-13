@@ -1,0 +1,18 @@
+﻿{{- $url := .Get "url" -}}
+{{- $title := .Get "title" | default $url -}}
+{{- $description := .Get "description" -}}
+{{- $image := .Get "image" -}}
+{{- $host := urls.Parse $url -}}
+
+<a class="spyke-link" href="{{ $url | safeURL }}" target="_blank" rel="noopener noreferrer">
+  {{- with $image }}
+    <img class="spyke-link__image" src="{{ . | safeURL }}" alt="" loading="lazy">
+  {{- end }}
+  <span class="spyke-link__details">
+    <span class="spyke-link__domain">{{ $host.Host }}</span>
+    <strong class="spyke-link__title">{{ $title }}</strong>
+    {{- with $description }}
+      <span class="spyke-link__description">{{ . }}</span>
+    {{- end }}
+  </span>
+</a>
