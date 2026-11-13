@@ -8,3 +8,6 @@
 
 # Hugo lock file
 .hugo_build.lock
+
+# Hugo generated JavaScript configuration
+/assets/jsconfig.json
