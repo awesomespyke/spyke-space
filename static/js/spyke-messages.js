@@ -81,3 +81,69 @@ if (document.readyState === "loading") {
 } else {
   localizeTransmissionTimes();
 }
+
+// Floating navigation: open, dismiss, and auto-hide on downward scroll.
+(function () {
+  const container = document.querySelector(".spyke-floating-nav");
+  const toggle = document.getElementById("spyke-nav-toggle");
+  const panel = document.getElementById("spyke-nav-panel");
+
+  if (!container || !toggle || !panel) return;
+
+  function setOpen(open) {
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    container.classList.remove("is-hidden");
+  }
+
+  toggle.addEventListener("click", () => {
+    setOpen(panel.hidden);
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!container.contains(event.target)) setOpen(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  let previousY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const currentY = window.scrollY;
+    const difference = currentY - previousY;
+
+    if (panel.hidden && Math.abs(difference) > 4) {
+      container.classList.toggle("is-hidden", difference > 0 && currentY > 100);
+    }
+
+    previousY = currentY;
+  }, { passive: true });
+})();
+// Keep navigation accessible when switching between desktop and mobile.
+(function () {
+  const panel = document.getElementById("spyke-nav-panel");
+  const toggle = document.getElementById("spyke-nav-toggle");
+  if (!panel || !toggle) return;
+
+  const desktop = window.matchMedia("(min-width: 1024px)");
+
+  function synchronizeNavigation() {
+    if (desktop.matches) {
+      panel.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+    } else {
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open navigation");
+    }
+  }
+
+  synchronizeNavigation();
+  desktop.addEventListener("change", synchronizeNavigation);
+})();

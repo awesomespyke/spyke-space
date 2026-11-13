@@ -186,3 +186,137 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
     transition: none;
   }
 }
+
+/* SpykeSpace floating icon navigation */
+.spyke-floating-nav {
+  position: relative;
+  z-index: 100;
+  margin-left: auto;
+}
+
+.spyke-floating-nav__toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--chat-border, rgba(128,128,128,.25));
+  border-radius: 14px;
+  background: var(--chat-header, rgba(128,128,128,.08));
+  color: inherit;
+  cursor: pointer;
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.spyke-floating-nav__toggle:hover {
+  opacity: .75;
+}
+
+.spyke-floating-nav.is-hidden .spyke-floating-nav__toggle {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.spyke-floating-nav__panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--chat-border, rgba(128,128,128,.25));
+  border-radius: 18px;
+  background: var(--chat-header, #fff);
+  box-shadow: 0 12px 36px rgba(0,0,0,.16);
+  z-index: 101;
+}
+
+.spyke-floating-nav__panel[hidden] {
+  display: none;
+}
+
+.spyke-floating-nav__panel a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 72px;
+  min-height: 70px;
+  padding: 10px;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.spyke-floating-nav__panel a:hover,
+.spyke-floating-nav__panel a:focus-visible {
+  background: rgba(128,128,128,.12);
+  transform: translateY(-2px);
+}
+
+.spyke-floating-nav__panel svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spyke-floating-nav__label {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spyke-floating-nav__toggle,
+  .spyke-floating-nav__panel a {
+    transition: none;
+  }
+}
+/* Responsive navigation: expanded desktop, floating menu on smaller screens */
+@media (min-width: 1024px) {
+  .spyke-floating-nav__toggle {
+    display: none;
+  }
+
+  .spyke-floating-nav__panel,
+  .spyke-floating-nav__panel[hidden] {
+    position: static;
+    display: flex;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .spyke-floating-nav__panel a {
+    min-width: 68px;
+    min-height: 52px;
+    padding: 6px 10px;
+  }
+
+  .spyke-floating-nav__label {
+    font-size: 11px;
+  }
+}
+
+
+/* Desktop navigation: icons only */
+@media (min-width: 1024px) {
+  .spyke-floating-nav__label {
+    display: none;
+  }
+
+  .spyke-floating-nav__panel a {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+}
