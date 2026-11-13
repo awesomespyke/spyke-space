@@ -14,3 +14,62 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
 @media(max-width:650px){.spyke-chat__header{padding:10px 12px;gap:10px}.spyke-chat__identity strong{font-size:1rem}.spyke-chat__nav{gap:10px}.spyke-chat__nav a{font-size:.78rem}.spyke-chat__thread{padding:15px 9px 28px;gap:10px}.spyke-chat__bubble{max-width:94%;padding:9px 10px 7px}.spyke-chat__bubble--media{max-width:97%}.spyke-chat__content img{max-height:65dvh}.spyke-chat__content video{max-height:62dvh}}
 @media(max-width:390px){.spyke-chat__header{flex-wrap:wrap}.spyke-chat__nav{order:3;width:100%;justify-content:space-around}.spyke-chat__theme{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){.spyke-chat *{scroll-behavior:auto!important}}
+
+/* SpykeSpace iridescence experiment 01: identity */
+.spyke-chat__identity strong {
+  color: var(--chat-ink);
+  background-image: linear-gradient(
+    110deg,
+    var(--chat-ink) 0%,
+    #568fd7 28%,
+    #a48ce5 43%,
+    #e9a5cf 52%,
+    #83d6c9 62%,
+    var(--chat-ink) 85%
+  );
+  background-size: 240% 100%;
+  background-position: 100% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 900ms ease;
+}
+
+.spyke-chat__identity:hover strong,
+.spyke-chat__identity:focus-visible strong {
+  background-position: 0% 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spyke-chat__identity strong {
+    transition: none;
+  }
+}
+
+/* SpykeSpace wordmark — prominent identity */
+.spyke-chat__identity {
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.spyke-chat__identity strong {
+  display: block;
+  font-size: clamp(32px, 3.8vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+}
+
+.spyke-chat__header {
+  min-height: 88px;
+}
+
+@media (max-width: 650px) {
+  .spyke-chat__identity strong {
+    font-size: clamp(28px, 6vw, 36px);
+  }
+
+  .spyke-chat__header {
+    min-height: 76px;
+  }
+}
