@@ -347,7 +347,7 @@ def delete_command(token, message):
         paths = [plan['message']] + [MEDIA / x for x in plan['exclusive']]
         relative = [str(x.relative_to(ROOT)) for x in paths]
         tx = DeletionTransaction(DELETION_TX_PATH)
-        tx.begin(plan['id'], str(plan['message'].relative_to(ROOT)))
+        tx.begin(plan['id'], plan['message'].relative_to(ROOT).as_posix())
         git('rm', '--', *relative)
         try:
             run('hugo', '--gc', '--minify')
