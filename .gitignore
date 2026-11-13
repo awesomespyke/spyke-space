@@ -11,3 +11,5 @@
 
 # Hugo generated JavaScript configuration
 /assets/jsconfig.json
+
+__pycache__/
