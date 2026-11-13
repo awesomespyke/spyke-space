@@ -16,11 +16,11 @@
       {{ $date := $page.Date.Format "2006-01-02" }}
       {{ $previous := "" }}
       {{ if gt $i 0 }}{{ $previous = (index $pages (sub $i 1)).Date.Format "2006-01-02" }}{{ end }}
-      {{ if ne $date $previous }}<div class="spyke-chat__date"><time datetime="{{ $date }}">{{ $page.Date.Format "January 2, 2006" }}</time></div>{{ end }}
+      {{ if ne $date $previous }}<div class="spyke-chat__date"><time class="spyke-local-date" datetime="{{ $date }}">{{ $page.Date.Format "January 2, 2006" }}</time></div>{{ end }}
       <article class="spyke-chat__message" id="{{ $page.File.ContentBaseName }}">
         <div class="spyke-chat__bubble{{ if in $page.RawContent "![" }} spyke-chat__bubble--media{{ end }}">
           <div class="spyke-chat__content">{{ $page.Content }}</div>
-          <footer class="spyke-chat__meta"><time datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "3:04 PM" }} UTC</time><a href="{{ $page.RelPermalink }}" aria-label="Permalink to this message">#</a></footer>
+          <footer class="spyke-chat__meta"><time class="spyke-local-time" datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "3:04 PM" }}</time><a href="{{ $page.RelPermalink }}" aria-label="Permalink to this message">#</a></footer>
         </div>
       </article>
     {{ else }}<p class="spyke-chat__empty">Nothing shared yet.</p>{{ end }}
