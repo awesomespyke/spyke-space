@@ -330,32 +330,10 @@ def delete_command(token, message):
     if command.split(maxsplit=1)[0] == '/delete':
         reply = message.get('reply_to_message') or {}
         if not reply or not isinstance(reply.get('message_id'), int):
-            tell(token, chat, 'Reply to the original Telegram message with /delete to preview its removal.')
+            tell(token, chat, 'Reply to the original Telegram message with /delete.')
             return
         plan = plan_delete(CONTENT, MEDIA, chat, reply['message_id'])
-        code = secrets.token_hex(3)
-        pending_save({'code': code, 'chat': chat, 'reply': reply['message_id'],
-                      'id': plan['id'], 'expires': time.time() + 600})
-        tell(token, chat, 'Deletion preview (nothing removed):\n'
-             + plan['message'].name + '\nExclusive attachments: '
-             + str(len(plan['exclusive'])) + '\nShared attachments retained: '
-             + str(len(plan['shared'])) + '\nConfirm within 10 minutes: /confirm ' + code
-             + '\nOr /cancel')
-        return
-    if command.split(maxsplit=1)[0] == '/confirm':
-        parts = command.split()
-        pending = pending_load()
-        if (len(parts) != 2 or not pending or pending['chat'] != chat
-                or parts[1] != pending['code']
-                or (not pending.get('committed') and time.time() > pending['expires'])):
-            tell(token, chat, 'No matching active confirmation. Start again with /delete.')
-            return
-        if pending.get('committed'):
-            Tombstones(TOMBSTONES_PATH).add(pending['id'])
-            push_pending()
-            PENDING.unlink(missing_ok=True)
-            tell(token, chat, 'Deletion published successfully.')
-            return
+        pending = {'chat': chat, 'reply': reply['message_id'], 'id': plan['id']}
         plan = plan_delete(CONTENT, MEDIA, chat, pending['reply'])
         if plan['id'] != pending['id']:
             raise RuntimeError('Deletion target changed; cancelled.')
@@ -382,7 +360,7 @@ def delete_command(token, message):
         # this marker still requires Git reconciliation before processing updates.
         Tombstones(TOMBSTONES_PATH).add(plan['id'])
         tx.clear()
-        # Persist committed state before push. If push fails, /confirm can resume safely.
+        # Persist committed state before push for automatic retry on the next loop.
         pending['committed'] = True
         pending_save(pending)
         git('push', 'origin', 'main')
@@ -460,7 +438,7 @@ def process_staged(token, journal, now=None):
             journal.mark_done(members)
             continue
         command = (message.get('text') or '').strip().split(' ', 1)[0]
-        if command in ('/delete', '/confirm', '/cancel'):
+        if command in ('/delete', '/cancel'):
             try:
                 delete_command(token, message)
             except ValueError as exc:
@@ -479,7 +457,7 @@ def process_staged(token, journal, now=None):
         journal.mark_done(members)
         try:
             tell(token, message['chat']['id'],
-                 'ðŸ“¡ Transmission submitted to SpykeSpace.' if status == 'published'
+                 '\U0001F4E1 Transmission submitted to SpykeSpace.' if status == 'published'
                  else 'This transmission was deleted.' if status == 'deleted'
                  else 'This transmission already exists.')
         except Exception as exc:
