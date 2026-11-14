@@ -19,6 +19,7 @@ import secrets
 from album_journal import Journal
 from tombstones import Tombstones
 from deletion_transaction import DeletionTransaction, reconcile as reconcile_deletion
+from transmission_edits import caption_block, replace_caption, EditableCaptionError
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / 'content' / 'transmissions'
@@ -189,7 +190,7 @@ def merge_album(token, messages, record):
         for m in additions:
             content = m.get('caption') or m.get('text') or ''
             if content:
-                new_captions.append(content)
+                new_captions.append(caption_block(m['message_id'], content))
             found = file_kind(m)
             if not found:
                 raise ValueError('Late album member has no supported media.')
@@ -264,8 +265,8 @@ def publish(token, messages):
     try:
         for message in messages:
             body = message.get('text') or message.get('caption') or ''
-            if body:
-                captions.append(body)
+            if body or group:
+                captions.append(caption_block(message['message_id'], body))
             found = file_kind(message)
             if not found:
                 if 'text' not in message:
@@ -304,6 +305,61 @@ def publish(token, messages):
                 path.unlink(missing_ok=True)
             git('reset', '--quiet')
         raise
+
+
+def edit_transmission(token, message):
+    """Edit published text/caption only; never change media or identity."""
+    chat = message['chat']['id']
+    message_id = message['message_id']
+    matches = [r for r in inventory(CONTENT)
+               if r['id'].startswith('telegram:{}:'.format(chat))
+               and message_id in r['message_ids']]
+    if len(matches) > 1:
+        raise RuntimeError('Ambiguous Telegram message identity; edit deferred.')
+    if not matches:
+        # A deleted post must not be recreated by a delayed edit.
+        group = message.get('media_group_id')
+        key = ('album-' + re.sub(r'[^0-9A-Za-z_-]', '', str(group))) if group else str(message_id)
+        if Tombstones(TOMBSTONES_PATH).contains('telegram:{}:{}'.format(chat, key)):
+            return 'deleted'
+        # For old albums, an edited update may not include media_group_id.
+        # No matching published message: do not create a new transmission.
+        return 'missing'
+    record = matches[0]
+    new_caption = message.get('text') if 'text' in message else message.get('caption', '')
+    if not isinstance(new_caption, str):
+        raise ValueError('Edited message has no text or caption.')
+    if git('status', '--porcelain').stdout.strip():
+        raise RuntimeError('Git working tree is not clean; edit deferred.')
+    git('pull', '--ff-only', 'origin', 'main')
+    # Re-resolve after pulling; the original may have been deleted remotely.
+    matches = [r for r in inventory(CONTENT) if r['id'] == record['id']
+               and message_id in r['message_ids']]
+    if len(matches) != 1:
+        return 'missing'
+    destination = matches[0]['path']
+    original = destination.read_text(encoding='utf-8')
+    front, body = frontmatter(original)
+    updated_body = replace_caption(body, message_id, new_caption,
+                                   is_album=record['id'].split(':')[-1].startswith('album-'))
+    if updated_body == body:
+        return 'unchanged'
+    # Link cards are generated during publication. Preserve existing cards;
+    # editing links in captions does not refresh their preview metadata.
+    updated = '+++\n' + front + '\n+++\n' + updated_body
+    try:
+        destination.write_text(updated, encoding='utf-8')
+        run('hugo', '--gc', '--minify')
+        git('add', '--', str(destination.relative_to(ROOT)))
+        git('commit', '-m', 'Edit transmission ' + record['id'])
+    except Exception:
+        # Only restore if the edit has not been committed.
+        if git('status', '--porcelain', '--', str(destination.relative_to(ROOT))).stdout.strip():
+            git('restore', '--staged', '--', str(destination.relative_to(ROOT)))
+            git('restore', '--', str(destination.relative_to(ROOT)))
+        raise
+    git('push', 'origin', 'main')
+    return 'edited'
 
 
 def pending_load():
@@ -433,6 +489,31 @@ def process_staged(token, journal, now=None):
     by the reconciliation-aware publisher. Never advance an offset here.
     """
     for members in journal.ready(now=now, quiet_seconds=10):
+        if 'edited_message' in members[0]:
+            if len(members) != 1:
+                raise RuntimeError('Edited update unexpectedly grouped with other messages.')
+            message = members[0]['edited_message']
+            if message.get('from', {}).get('id') != AUTHORIZED_USER:
+                journal.mark_done(members)
+                continue
+            try:
+                status = edit_transmission(token, message)
+            except EditableCaptionError as exc:
+                journal.mark_done(members)
+                try:
+                    tell(token, message['chat']['id'], 'Caption edit needs manual reconciliation: ' + str(exc))
+                except Exception as ack_exc:
+                    print('Edit notice failed:', repr(ack_exc), flush=True)
+                continue
+            journal.mark_done(members)
+            try:
+                if status == 'edited':
+                    tell(token, message['chat']['id'], 'Transmission edit published to SpykeSpace.')
+                elif status == 'missing':
+                    tell(token, message['chat']['id'], 'No matching published transmission; edit skipped.')
+            except Exception as exc:
+                print('Edit acknowledgement failed:', repr(exc), flush=True)
+            continue
         message = members[0].get('message') or {}
         if message.get('from', {}).get('id') != AUTHORIZED_USER:
             journal.mark_done(members)
