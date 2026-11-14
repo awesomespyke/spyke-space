@@ -15,18 +15,13 @@
 {{ $photos = sort $photos "date" "desc" }}
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
-<main class="spyke-chat spyke-gallery" aria-label="SpykeSpace Gallery">
+<main class="spyke-chat spyke-gallery" aria-label="SpykeSpace Photos">
   <header class="spyke-chat__header">
-    <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong><span>Gallery</span></a>
-    <nav class="spyke-chat__nav" aria-label="SpykeSpace destinations">
-      <a href="{{ .Site.Home.RelPermalink }}">Messages</a>
-      <a href="{{ "gallery/" | relURL }}" aria-current="page">Gallery</a>
-      <a href="https://library.spyke.space/">Library</a>
-    </nav>
-    <button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button>
+    <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong></a>
+    {{ partial "spyke/navigation.html" . }}
+    <button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">&#9680;</button>
   </header>
-  <section class="spyke-gallery__body" aria-labelledby="spyke-gallery-heading">
-    <header class="spyke-gallery__intro"><h1 id="spyke-gallery-heading">Gallery</h1><p>Photographs from Transmissions.</p></header>
+  <section class="spyke-gallery__body" aria-label="Photos">
     {{ if gt (len $photos) 0 }}
       <div class="spyke-gallery__mosaic" id="spyke-gallery-mosaic">
         {{ range $index, $photo := $photos }}
@@ -48,5 +43,6 @@
     <div class="spyke-lightbox__bottom"><span id="spyke-lightbox-caption"></span><a id="spyke-lightbox-source" href="#">View original message ↗</a></div>
   </div>
 </div>
+<script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
 <script defer src="{{ "js/spyke-gallery.js" | relURL }}"></script>
 {{ end }}
