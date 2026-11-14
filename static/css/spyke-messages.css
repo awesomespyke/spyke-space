@@ -1,4 +1,4 @@
-/* SpykeSpace Messages — stage-one candidate, isolated from Essays and Library. */
+/* SpykeSpace Messages - visual foundation. */
 body:has(.spyke-chat) .left-sidebar,body:has(.spyke-chat) .right-sidebar{display:none!important}
 body:has(.spyke-chat) .main-container,body:has(.spyke-chat) .main-container>main,body:has(.spyke-chat) .main-container>.main{width:100%!important;max-width:none!important;min-width:0!important}
 body:has(.spyke-chat) .main-container{display:block!important}
@@ -46,7 +46,7 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
   }
 }
 
-/* SpykeSpace wordmark � prominent identity */
+/* SpykeSpace wordmark — prominent identity */
 .spyke-chat__identity {
   flex-shrink: 0;
   line-height: 1;
@@ -278,14 +278,14 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
     transition: none;
   }
 }
-/* Responsive navigation: expanded desktop, floating menu on smaller screens */
+
+/* Desktop navigation: persistent icons, no visible labels */
 @media (min-width: 1024px) {
   .spyke-floating-nav__toggle {
     display: none;
   }
 
-  .spyke-floating-nav__panel,
-  .spyke-floating-nav__panel[hidden] {
+  .spyke-floating-nav__panel {
     position: static;
     display: flex;
     gap: 12px;
@@ -297,26 +297,12 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
   }
 
   .spyke-floating-nav__panel a {
-    min-width: 68px;
-    min-height: 52px;
-    padding: 6px 10px;
-  }
-
-  .spyke-floating-nav__label {
-    font-size: 11px;
-  }
-}
-
-
-/* Desktop navigation: icons only */
-@media (min-width: 1024px) {
-  .spyke-floating-nav__label {
-    display: none;
-  }
-
-  .spyke-floating-nav__panel a {
     min-width: 44px;
     min-height: 44px;
     padding: 10px;
+  }
+
+  .spyke-floating-nav__label {
+    display: none;
   }
 }

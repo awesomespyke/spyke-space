@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   'use strict';
   var root = document.documentElement;
   var toggle = document.querySelector('.spyke-chat__theme');
@@ -82,7 +82,7 @@ if (document.readyState === "loading") {
   localizeTransmissionTimes();
 }
 
-// Floating navigation: open, dismiss, and auto-hide on downward scroll.
+// Responsive SpykeSpace navigation.
 (function () {
   const container = document.querySelector(".spyke-floating-nav");
   const toggle = document.getElementById("spyke-nav-toggle");
@@ -90,23 +90,34 @@ if (document.readyState === "loading") {
 
   if (!container || !toggle || !panel) return;
 
+  const desktop = window.matchMedia("(min-width: 1024px)");
+
   function setOpen(open) {
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    toggle.setAttribute(
+      "aria-label",
+      open ? "Close navigation" : "Open navigation"
+    );
     container.classList.remove("is-hidden");
   }
 
+  function synchronize() {
+    setOpen(desktop.matches);
+  }
+
   toggle.addEventListener("click", () => {
-    setOpen(panel.hidden);
+    if (!desktop.matches) setOpen(panel.hidden);
   });
 
   document.addEventListener("pointerdown", (event) => {
-    if (!container.contains(event.target)) setOpen(false);
+    if (!desktop.matches && !container.contains(event.target)) {
+      setOpen(false);
+    }
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !panel.hidden) {
+    if (!desktop.matches && event.key === "Escape" && !panel.hidden) {
       setOpen(false);
       toggle.focus();
     }
@@ -118,32 +129,16 @@ if (document.readyState === "loading") {
     const currentY = window.scrollY;
     const difference = currentY - previousY;
 
-    if (panel.hidden && Math.abs(difference) > 4) {
-      container.classList.toggle("is-hidden", difference > 0 && currentY > 100);
+    if (!desktop.matches && panel.hidden && Math.abs(difference) > 4) {
+      container.classList.toggle(
+        "is-hidden",
+        difference > 0 && currentY > 100
+      );
     }
 
     previousY = currentY;
   }, { passive: true });
-})();
-// Keep navigation accessible when switching between desktop and mobile.
-(function () {
-  const panel = document.getElementById("spyke-nav-panel");
-  const toggle = document.getElementById("spyke-nav-toggle");
-  if (!panel || !toggle) return;
 
-  const desktop = window.matchMedia("(min-width: 1024px)");
-
-  function synchronizeNavigation() {
-    if (desktop.matches) {
-      panel.hidden = false;
-      toggle.setAttribute("aria-expanded", "true");
-    } else {
-      panel.hidden = true;
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Open navigation");
-    }
-  }
-
-  synchronizeNavigation();
-  desktop.addEventListener("change", synchronizeNavigation);
+  synchronize();
+  desktop.addEventListener("change", synchronize);
 })();
