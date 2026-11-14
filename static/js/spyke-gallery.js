@@ -1,13 +1,5 @@
 (() => {
   'use strict';
-  const themeButton = document.querySelector('.spyke-gallery .spyke-chat__theme');
-  themeButton?.addEventListener('click', () => {
-    const root = document.documentElement;
-    const current = root.dataset.scheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    const next = current === 'dark' ? 'light' : 'dark';
-    root.dataset.scheme = next;
-    try { localStorage.setItem('StackColorScheme', next); } catch (_) {}
-  });
   const tiles = Array.from(document.querySelectorAll('.spyke-gallery__tile'));
   const box = document.getElementById('spyke-lightbox');
   if (!tiles.length || !box) return;
