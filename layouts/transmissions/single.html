@@ -1,9 +1,10 @@
 {{ define "main" }}
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
 <main class="spyke-chat spyke-chat--single" aria-label="SpykeSpace message">
-  <header class="spyke-chat__header"><a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong><span>Messages</span></a><nav class="spyke-chat__nav" aria-label="SpykeSpace destinations"><a href="{{ .Site.Home.RelPermalink }}">Messages</a><a href="https://library.spyke.space/">Library</a></nav><button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance">◐</button></header>
-  <div class="spyke-chat__thread"><div class="spyke-chat__date">{{ .Date.Format "January 2, 2006" }}</div><article class="spyke-chat__message"><div class="spyke-chat__bubble"><div class="spyke-chat__content">{{ .Content }}</div><footer class="spyke-chat__meta">{{ .Date.Format "3:04 PM" }} UTC</footer></div></article></div>
+  <header class="spyke-chat__header"><a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong><span>Messages</span></a>{{ partial "spyke/navigation.html" . }}<button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance">◐</button></header>
+  <div class="spyke-chat__thread"><div class="spyke-chat__date"><time class="spyke-single-date" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 2, 2006" }}</time></div><article class="spyke-chat__message"><div class="spyke-chat__bubble"><div class="spyke-chat__content">{{ .Content }}</div><footer class="spyke-chat__meta"><time class="spyke-single-time" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "3:04 PM" }}</time></footer></div></article></div>
   <a class="spyke-chat__return" href="{{ .Site.Home.RelPermalink }}#{{ .File.ContentBaseName }}">Return to conversation</a>
 </main>
+<script defer src="{{ "js/spyke-media.js" | relURL }}"></script>
 <script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
 {{ end }}

@@ -1,0 +1,21 @@
+{{ define "main" }}
+{{ $items := partial "spyke/media-items.html" (dict "site" .Site "kind" "sounds") }}
+<link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/spyke-media.css" | relURL }}">
+<main class="spyke-chat spyke-media" aria-label="SpykeSpace Sounds">
+  <header class="spyke-chat__header"><a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong></a>{{ partial "spyke/navigation.html" . }}<button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button></header>
+  <section class="spyke-media__body" aria-label="Sounds"><h1>Sounds</h1>
+    {{ if $items }}<div class="spyke-media__list">
+      {{ range $items }}<article class="spyke-media__item">
+        <audio controls preload="none" src="{{ .src }}">Playback unavailable in this browser.</audio>
+        <div class="spyke-media__context"><time class="spyke-media__time" datetime="{{ .date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .date.Format "January 2, 2006, 3:04 PM" }}</time>
+          {{ with .caption }}<p class="spyke-media__caption">{{ . }}</p>{{ end }}
+          <a href="{{ .page }}">View original message</a>
+        </div>
+      </article>{{ end }}
+    </div>{{ else }}<p class="spyke-media__empty">No sounds published yet.</p>{{ end }}
+  </section>
+</main>
+<script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
+<script defer src="{{ "js/spyke-media.js" | relURL }}"></script>
+{{ end }}

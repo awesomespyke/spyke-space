@@ -1,18 +1,5 @@
 {{ define "main" }}
-{{ $photos := slice }}
-{{ range where .Site.RegularPages "Section" "transmissions" }}
-  {{ $page := . }}
-  {{ with .Params.spyke_media }}
-    {{ range . }}
-      {{ $filename := printf "%v" . }}
-      {{ $ext := lower (path.Ext $filename) }}
-      {{ if in (slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".avif") $ext }}
-        {{ $photos = $photos | append (dict "src" (printf "/transmissions/%s" $filename | relURL) "page" $page.RelPermalink "date" $page.Date "title" $page.Title) }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
-{{ end }}
-{{ $photos = sort $photos "date" "desc" }}
+{{ $photos := partial "spyke/media-items.html" (dict "site" .Site "kind" "photos") }}
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
 <main class="spyke-chat spyke-gallery" aria-label="SpykeSpace Photos">
@@ -25,8 +12,8 @@
     {{ if gt (len $photos) 0 }}
       <div class="spyke-gallery__mosaic" id="spyke-gallery-mosaic">
         {{ range $index, $photo := $photos }}
-          <button class="spyke-gallery__tile" type="button" data-gallery-index="{{ $index }}" data-src="{{ $photo.src }}" data-source="{{ $photo.page }}" data-caption="{{ $photo.title }}" aria-label="Open photograph {{ add $index 1 }} of {{ len $photos }} from {{ $photo.title }}">
-            <img src="{{ $photo.src }}" alt="Photograph from {{ $photo.title }}" loading="lazy" decoding="async">
+          <button class="spyke-gallery__tile" type="button" data-gallery-index="{{ $index }}" data-src="{{ $photo.src }}" data-source="{{ $photo.page }}" data-caption="{{ $photo.caption }}" data-date="{{ $photo.date.Format "2006-01-02T15:04:05Z07:00" }}" aria-label="Open photograph {{ add $index 1 }} of {{ len $photos }} published {{ $photo.date.Format "January 2, 2006" }}">
+            <img src="{{ $photo.src }}" alt="Photograph published {{ $photo.date.Format "January 2, 2006" }}" loading="lazy" decoding="async">
           </button>
         {{ end }}
       </div>
@@ -40,7 +27,7 @@
   <div class="spyke-lightbox__content">
     <div class="spyke-lightbox__top"><span id="spyke-lightbox-count" aria-live="polite"></span><button type="button" class="spyke-lightbox__control" id="spyke-lightbox-close" aria-label="Close photograph viewer">×</button></div>
     <div class="spyke-lightbox__stage"><button type="button" class="spyke-lightbox__control spyke-lightbox__arrow" id="spyke-lightbox-prev" aria-label="Previous photograph">‹</button><img id="spyke-lightbox-image" alt=""><button type="button" class="spyke-lightbox__control spyke-lightbox__arrow" id="spyke-lightbox-next" aria-label="Next photograph">›</button></div>
-    <div class="spyke-lightbox__bottom"><span id="spyke-lightbox-caption"></span><a id="spyke-lightbox-source" href="#">View original message ↗</a></div>
+    <div class="spyke-lightbox__bottom"><div class="spyke-lightbox__details"><time id="spyke-lightbox-date"></time><span id="spyke-lightbox-caption"></span></div><a id="spyke-lightbox-source" href="#">View original message ↗</a></div>
   </div>
 </div>
 <script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>

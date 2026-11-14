@@ -1,0 +1,31 @@
+{{- $kind := .kind -}}
+{{- $items := slice -}}
+{{- range where .site.RegularPages "Section" "transmissions" -}}
+  {{- $page := . -}}
+  {{- $media := .Params.spyke_media | default (slice) -}}
+  {{- $raw := .RawContent -}}
+  {{- $caption := "" -}}
+  {{- if eq (len $media) 1 -}}
+    {{- $caption = $raw -}}
+    {{- $caption = replaceRE `(?s)\{\{<\s*transmission-(audio|video)\b[^>]*>\}\}` "" $caption -}}
+    {{- $caption = replaceRE `(?m)^!?\[[^\]]*\]\(/transmissions/[^)]+\)\s*$` "" $caption -}}
+    {{- $caption = replaceRE `(?s)\{\{<\s*transmission-link\b.*?>\}\}` "" $caption -}}
+    {{- $caption = trim $caption " \r\n\t" -}}
+  {{- end -}}
+  {{- range $media -}}
+    {{- $filename := printf "%v" . -}}
+    {{- $ext := lower (path.Ext $filename) -}}
+    {{- $type := "" -}}
+    {{- if in (slice ".jpg" ".jpeg" ".png" ".webp" ".gif" ".avif") $ext -}}
+      {{- $type = "photos" -}}
+    {{- else if in (slice ".mp3" ".m4a" ".aac" ".ogg" ".oga" ".opus" ".wav" ".flac" ".weba") $ext -}}
+      {{- $type = "sounds" -}}
+    {{- else if in (slice ".mp4" ".webm" ".mov" ".m4v" ".ogv") $ext -}}
+      {{- $type = "videos" -}}
+    {{- end -}}
+    {{- if eq $type $kind -}}
+      {{- $items = append (dict "src" (printf "transmissions/%s" $filename | relURL) "page" $page.RelPermalink "date" $page.Date "caption" $caption "filename" $filename) $items -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (sort $items "date" "desc") -}}

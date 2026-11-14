@@ -7,6 +7,7 @@
   const count = document.getElementById('spyke-lightbox-count');
   const caption = document.getElementById('spyke-lightbox-caption');
   const source = document.getElementById('spyke-lightbox-source');
+  const dateLabel = document.getElementById('spyke-lightbox-date');
   const closeButton = document.getElementById('spyke-lightbox-close');
   const prev = document.getElementById('spyke-lightbox-prev');
   const next = document.getElementById('spyke-lightbox-next');
@@ -18,6 +19,9 @@
     image.alt = tile.querySelector('img')?.alt || 'Gallery photograph';
     count.textContent = `${index + 1} / ${tiles.length}`;
     caption.textContent = tile.dataset.caption || '';
+    const date = new Date(tile.dataset.date);
+    dateLabel.textContent = Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'short' }).format(date);
+    dateLabel.dateTime = tile.dataset.date || '';
     source.href = tile.dataset.source;
   }
   function open(n, button) {
