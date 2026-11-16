@@ -1,5 +1,6 @@
 {{ $pages := where .Site.RegularPages "Section" "transmissions" }}
 {{ $pages = $pages.ByDate }}
+<link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
 <main class="spyke-chat" aria-label="SpykeSpace Messages">
   <header class="spyke-chat__header">

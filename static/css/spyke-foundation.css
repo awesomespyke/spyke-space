@@ -1,0 +1,14 @@
+/* SpykeSpace canonical color foundation. */
+:root {
+  --spyke-bg:#f4f7fc;--spyke-header:#eaf0fa;--spyke-bubble:#dceafe;--spyke-ink:#152943;--spyke-muted:#526782;--spyke-line:rgba(40,80,135,.16);--spyke-accent:#235eb4;
+}
+html[data-scheme="dark"],
+body[data-scheme="dark"],
+html[data-theme="dark"] {
+  --spyke-bg:#101827;--spyke-header:#17243a;--spyke-bubble:#223e65;--spyke-ink:#edf4ff;--spyke-muted:#b4c4dc;--spyke-line:rgba(200,220,255,.15);--spyke-accent:#9dc4ff;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-scheme]):not([data-theme]):not(:has(body[data-scheme])) {
+    --spyke-bg:#101827;--spyke-header:#17243a;--spyke-bubble:#223e65;--spyke-ink:#edf4ff;--spyke-muted:#b4c4dc;--spyke-line:rgba(200,220,255,.15);--spyke-accent:#9dc4ff;
+  }
+}

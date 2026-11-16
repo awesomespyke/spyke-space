@@ -1,5 +1,6 @@
 {{ define "main" }}
 {{ $photos := partial "spyke/media-items.html" (dict "site" .Site "kind" "photos") }}
+<link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
 <main class="spyke-chat spyke-gallery" aria-label="SpykeSpace Photos">
