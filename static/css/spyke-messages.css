@@ -268,7 +268,7 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
 }
 
 .spyke-floating-nav__label {
-  font-size: 11px;
+  font-size: var(--spyke-nav-label-size);
   font-weight: 500;
 }
 

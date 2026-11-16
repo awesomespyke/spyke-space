@@ -1,5 +1,6 @@
 /* SpykeSpace canonical color foundation. */
 :root {
+  --spyke-nav-label-size:14px;
   --spyke-bg:#f4f7fc;--spyke-header:#eaf0fa;--spyke-bubble:#dceafe;--spyke-ink:#152943;--spyke-muted:#526782;--spyke-line:rgba(40,80,135,.16);--spyke-accent:#235eb4;
 }
 html[data-scheme="dark"],
