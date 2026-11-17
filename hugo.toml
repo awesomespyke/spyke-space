@@ -20,7 +20,7 @@ url = "/about/"
 weight = 25
 
 [params.sidebar]
-emoji = "✨"
+emoji = "Γ£¿"
 subtitle = "A digital notebook."
 avatar = "/img/avatar.png"
 
@@ -48,3 +48,6 @@ lang = "en"
 
 [params.article.list]
 showTags = false
+
+[params]
+favicon = '/favicon.png'
