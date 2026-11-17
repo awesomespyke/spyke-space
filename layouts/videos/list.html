@@ -2,6 +2,7 @@
 {{ $items := partial "spyke/media-items.html" (dict "site" .Site "kind" "videos") }}
 <link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-media.css" | relURL }}">
 <main class="spyke-chat spyke-media" aria-label="SpykeSpace Videos">
   <header class="spyke-chat__header"><a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong></a>{{ partial "spyke/navigation.html" . }}<button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button></header>
