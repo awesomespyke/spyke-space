@@ -317,3 +317,8 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
     object-fit:contain;
   }
 }
+
+/* Give native audio controls a stable, responsive chat bubble. */
+.spyke-chat__bubble:has(.spyke-chat__content audio) {
+  width: min(360px, 100%);
+}
