@@ -334,3 +334,15 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
         max-width: 97%;
     }
 }
+
+/* Embedded YouTube players */
+.spyke-chat__bubble:has(.spyke-youtube) {
+    width: min(100%, 900px);
+    max-width: 90%;
+}
+
+@media (max-width: 650px) {
+    .spyke-chat__bubble:has(.spyke-youtube) {
+        max-width: 97%;
+    }
+}

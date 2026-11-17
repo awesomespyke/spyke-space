@@ -1,0 +1,24 @@
+{{- $id := .Get "id" -}}
+<div class="spyke-youtube">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/{{ $id }}"
+    title="YouTube video player"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+</div>
+<style>
+.spyke-youtube {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+}
+.spyke-youtube iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+</style>

@@ -142,6 +142,23 @@ def render_item(kind, url):
     return '{{< transmission-video src="' + url + '" >}}'
 
 
+def youtube_id(url):
+    """Recognize supported YouTube video links without accepting lookalike hosts."""
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme != 'https' or parts.username or parts.password or parts.port:
+        return None
+    host = (parts.hostname or '').lower().rstrip('.')
+    path = parts.path.strip('/').split('/')
+    candidate = None
+    if host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+        if parts.path == '/watch':
+            candidate = urllib.parse.parse_qs(parts.query).get('v', [None])[0]
+        elif len(path) == 2 and path[0] in ('shorts', 'live', 'embed'):
+            candidate = path[1]
+    elif host == 'youtu.be' and len(path) == 1:
+        candidate = path[0]
+    return candidate if candidate and re.fullmatch(r'[A-Za-z0-9_-]{11}', candidate) else None
+
 def link_card(captions):
     """Create one optional rich preview without changing original message text."""
     text = '\n'.join(captions)
@@ -150,6 +167,9 @@ def link_card(captions):
         return None
 
     url = match.group(0).rstrip('.,;:!?)]}')
+    video_id = youtube_id(url)
+    if video_id:
+        return '{{< transmission-youtube id="' + video_id + '" >}}'
     metadata = preview(url)
     if not metadata:
         return None
