@@ -28,4 +28,14 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
+{{- if eq $kind "videos" -}}
+  {{- range where .site.RegularPages "Section" "transmissions" -}}
+    {{- $page := . -}}
+    {{- $matches := findRE `\{\{<\s*transmission-youtube\s+id="([A-Za-z0-9_-]{11})"\s*>\}\}` .RawContent -}}
+    {{- range $matches -}}
+      {{- $id := replaceRE `.*id="([A-Za-z0-9_-]{11})".*` "$1" . -}}
+      {{- $items = append (dict "youtube" $id "page" $page.RelPermalink "date" $page.Date "caption" "") $items -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 {{- return (sort $items "date" "desc") -}}
