@@ -2,6 +2,7 @@
 {{ $pages = $pages.ByDate }}
 <link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
 <link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
+<link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
 <main class="spyke-chat" aria-label="SpykeSpace Messages">
   <header class="spyke-chat__header">
     <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong></a>
@@ -24,4 +25,6 @@
   </div>
   <div id="latest-message" aria-hidden="true"></div>
 </main>
+{{ partial "spyke/lightbox.html" . }}
 <script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
+<script defer src="{{ "js/spyke-gallery.js" | relURL }}"></script>

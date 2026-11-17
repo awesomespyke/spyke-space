@@ -1,8 +1,35 @@
 (() => {
   'use strict';
-  const tiles = Array.from(document.querySelectorAll('.spyke-gallery__tile'));
+
   const box = document.getElementById('spyke-lightbox');
-  if (!tiles.length || !box) return;
+  if (!box) return;
+
+  const galleryTiles = Array.from(document.querySelectorAll('.spyke-gallery__tile'));
+  const messageImages = Array.from(document.querySelectorAll('.spyke-chat__message .spyke-chat__content img'));
+
+  const items = galleryTiles.length
+    ? galleryTiles.map(tile => ({
+        opener: tile,
+        src: tile.dataset.src,
+        alt: tile.querySelector('img')?.alt || 'Gallery photograph',
+        caption: tile.dataset.caption || '',
+        date: tile.dataset.date || '',
+        source: tile.dataset.source || ''
+      }))
+    : messageImages.map(img => {
+        const message = img.closest('.spyke-chat__message');
+        return {
+          opener: img,
+          src: img.getAttribute("src") || img.src,
+          alt: img.alt || 'Message photograph',
+          caption: img.alt === 'Transmission photograph' ? '' : (img.alt || ''),
+          date: message?.querySelector('.spyke-local-time')?.dateTime || '',
+          source: message?.querySelector('.spyke-chat__meta a')?.href || ''
+        };
+      });
+
+  if (!items.length) return;
+
   const image = document.getElementById('spyke-lightbox-image');
   const count = document.getElementById('spyke-lightbox-count');
   const caption = document.getElementById('spyke-lightbox-caption');
@@ -11,54 +38,108 @@
   const closeButton = document.getElementById('spyke-lightbox-close');
   const prev = document.getElementById('spyke-lightbox-prev');
   const next = document.getElementById('spyke-lightbox-next');
-  let index = 0, opener = null, touchStartX = null;
+
+  let index = 0;
+  let opener = null;
+  let touchStartX = null;
+
   function show(n) {
-    index = (n + tiles.length) % tiles.length;
-    const tile = tiles[index];
-    image.src = tile.dataset.src;
-    image.alt = tile.querySelector('img')?.alt || 'Gallery photograph';
-    count.textContent = `${index + 1} / ${tiles.length}`;
-    caption.textContent = tile.dataset.caption || '';
-    const date = new Date(tile.dataset.date);
-    dateLabel.textContent = Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'short' }).format(date);
-    dateLabel.dateTime = tile.dataset.date || '';
-    source.href = tile.dataset.source;
+    index = (n + items.length) % items.length;
+    const item = items[index];
+
+    image.src = item.src;
+    image.alt = item.alt;
+    count.textContent = `${index + 1} / ${items.length}`;
+    caption.textContent = item.caption;
+
+    const date = new Date(item.date);
+    dateLabel.textContent = Number.isNaN(date.getTime())
+      ? ''
+      : new Intl.DateTimeFormat(undefined, {
+          dateStyle: 'long',
+          timeStyle: 'short'
+        }).format(date);
+    dateLabel.dateTime = item.date;
+
+    source.href = item.source || '#';
+    source.hidden = !item.source;
   }
-  function open(n, button) {
-    opener = button;
+
+  function open(n, element) {
+    opener = element;
     show(n);
     box.hidden = false;
     document.body.classList.add('spyke-gallery--lightbox-open');
     closeButton.focus();
   }
+
   function close() {
     box.hidden = true;
     document.body.classList.remove('spyke-gallery--lightbox-open');
     image.removeAttribute('src');
     opener?.focus();
   }
-  tiles.forEach((tile, i) => tile.addEventListener('click', () => open(i, tile)));
+
+  items.forEach((item, i) => {
+    const element = item.opener;
+
+    if (element.tagName === 'IMG') {
+      element.tabIndex = 0;
+      element.setAttribute('role', 'button');
+      element.setAttribute('aria-label', item.alt === 'Message photograph'
+        ? 'Open photograph'
+        : `Open photograph: ${item.alt}`);
+
+      element.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open(i, element);
+        }
+      });
+    }
+
+    element.addEventListener('click', () => open(i, element));
+  });
+
   closeButton.addEventListener('click', close);
   box.querySelector('[data-gallery-close]').addEventListener('click', close);
   prev.addEventListener('click', () => show(index - 1));
   next.addEventListener('click', () => show(index + 1));
-  document.addEventListener('keydown', (event) => {
+
+  document.addEventListener('keydown', event => {
     if (box.hidden) return;
-    if (event.key === 'Escape') { event.preventDefault(); close(); }
-    else if (event.key === 'ArrowLeft') { event.preventDefault(); show(index - 1); }
-    else if (event.key === 'ArrowRight') { event.preventDefault(); show(index + 1); }
-    else if (event.key === 'Tab') {
-      const focusables = [closeButton, prev, next, source];
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      show(index - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      show(index + 1);
+    } else if (event.key === 'Tab') {
+      const focusables = [closeButton, prev, next, source].filter(el => !el.hidden);
       const current = focusables.indexOf(document.activeElement);
-      if (event.shiftKey && current <= 0) { event.preventDefault(); source.focus(); }
-      else if (!event.shiftKey && current === focusables.length - 1) { event.preventDefault(); closeButton.focus(); }
+
+      if (event.shiftKey && current <= 0) {
+        event.preventDefault();
+        focusables[focusables.length - 1].focus();
+      } else if (!event.shiftKey && current === focusables.length - 1) {
+        event.preventDefault();
+        closeButton.focus();
+      }
     }
   });
-  box.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0]?.screenX ?? null; }, {passive:true});
-  box.addEventListener('touchend', (event) => {
+
+  box.addEventListener('touchstart', event => {
+    touchStartX = event.changedTouches[0]?.screenX ?? null;
+  }, { passive: true });
+
+  box.addEventListener('touchend', event => {
     if (touchStartX === null) return;
     const dx = (event.changedTouches[0]?.screenX ?? touchStartX) - touchStartX;
     if (Math.abs(dx) > 55) show(index + (dx < 0 ? 1 : -1));
     touchStartX = null;
-  }, {passive:true});
+  }, { passive: true });
 })();

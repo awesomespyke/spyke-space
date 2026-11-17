@@ -99,3 +99,4 @@ body[data-scheme="dark"] .spyke-lightbox__control {
 }
 
 .spyke-lightbox__details{display:flex;flex-direction:column;gap:.3rem;min-width:0}.spyke-lightbox__details time{font-size:.82rem;opacity:.85}.spyke-lightbox__details span{white-space:pre-wrap;overflow-wrap:anywhere}.spyke-lightbox__bottom{align-items:flex-start}
+.spyke-chat__message .spyke-chat__content img{cursor:zoom-in}
