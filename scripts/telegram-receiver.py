@@ -214,7 +214,7 @@ def merge_album(token, messages, record):
                 front += '\n' + line
         replace_field('spyke_message_ids', '[' + ', '.join(map(str, merged_ids)) + ']')
         replace_field('spyke_media', '[' + ', '.join(quote_toml(x) for x in merged_refs) + ']')
-        updated = '+++\n' + front + '\n+++\n' + body.rstrip('\n') + '\n\n' + '\n\n'.join(new_captions + new_blocks) + '\n'
+        updated = '+++\n' + front + '\n+++\n' + body.rstrip('\n') + '\n\n' + '\n\n'.join((new_blocks + new_captions if any(b.startswith('![Transmission photograph]') for b in new_blocks) else new_captions + new_blocks)) + '\n'
         destination.write_text(updated, encoding='utf-8')
         run('hugo', '--gc', '--minify')
         git('add', '--', str(destination.relative_to(ROOT)), *[str(p.relative_to(ROOT)) for p in new_files])
@@ -288,7 +288,7 @@ def publish(token, messages):
             'draft = false', '+++', '',
         ]
         card = link_card(captions)
-        body = '\n\n'.join(captions + blocks + ([card] if card else []))
+        body = '\n\n'.join((blocks + captions if any(b.startswith('![Transmission photograph]') for b in blocks) else captions + blocks) + ([card] if card else []))
         destination.write_text(decorate(destination, '\n'.join(front) + body + '\n',
                                         message_ids=[m['message_id'] for m in messages]), encoding='utf-8')
         run('hugo', '--gc', '--minify')

@@ -322,3 +322,15 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
 .spyke-chat__bubble:has(.spyke-chat__content audio) {
   width: min(360px, 100%);
 }
+
+/* Keep photograph sizing independent of caption text. */
+.spyke-chat__bubble--media:has(.spyke-chat__content img) {
+    width: max-content;
+    max-width: min(90%, 980px);
+}
+
+@media (max-width: 650px) {
+    .spyke-chat__bubble--media:has(.spyke-chat__content img) {
+        max-width: 97%;
+    }
+}
