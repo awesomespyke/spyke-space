@@ -346,3 +346,42 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
         max-width: 97%;
     }
 }
+/* SpykeSpace YouTube media-first presentation */
+.spyke-chat__bubble:has(.spyke-youtube) {
+    width: min(100%, 900px);
+    max-width: 96%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.spyke-chat__content:has(.spyke-youtube) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spyke-chat__content .spyke-youtube {
+    flex: none;
+    border-radius: 12px;
+}
+
+.spyke-chat__content .spyke-youtube__source {
+    display: none;
+}
+
+.spyke-chat__bubble:has(.spyke-youtube) .spyke-chat__content > p {
+    margin: 0;
+    padding: 0 4px;
+}
+
+.spyke-chat__bubble:has(.spyke-youtube) .spyke-chat__meta {
+    padding-right: 4px;
+}
+
+@media (max-width: 650px) {
+    .spyke-chat__bubble:has(.spyke-youtube) {
+        max-width: 100%;
+    }
+}

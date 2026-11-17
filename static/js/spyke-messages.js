@@ -142,3 +142,36 @@ if (document.readyState === "loading") {
   synchronize();
   desktop.addEventListener("change", synchronize);
 })();
+
+/* SpykeSpace YouTube presentation */
+document.querySelectorAll('.spyke-chat__content:has(.spyke-youtube)').forEach(content => {
+    const player = content.querySelector('.spyke-youtube');
+    if (!player) return;
+
+    const iframe = player.querySelector('iframe');
+    const videoId = iframe?.src.match(/\/embed\/([A-Za-z0-9_-]{11})(?:[?#]|$)/)?.[1];
+    if (!videoId) return;
+
+    for (const paragraph of content.querySelectorAll('p')) {
+        const link = paragraph.querySelector('a[href]');
+        if (!link || paragraph.textContent.trim() !== link.textContent.trim()) continue;
+        if (paragraph.querySelectorAll('a').length !== 1) continue;
+
+        try {
+            const url = new URL(link.href);
+            const host = url.hostname.toLowerCase();
+            const id = host === 'youtu.be'
+                ? url.pathname.slice(1)
+                : ['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(host)
+                    ? url.searchParams.get('v')
+                    : null;
+
+            if (id === videoId) {
+                paragraph.classList.add('spyke-youtube__source');
+                break;
+            }
+        } catch {}
+    }
+
+    content.prepend(player);
+});
