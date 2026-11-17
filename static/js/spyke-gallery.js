@@ -30,6 +30,8 @@
 
   if (!items.length) return;
 
+  const fromMessages = galleryTiles.length === 0 && messageImages.length > 0;
+
   const image = document.getElementById('spyke-lightbox-image');
   const count = document.getElementById('spyke-lightbox-count');
   const caption = document.getElementById('spyke-lightbox-caption');
@@ -62,7 +64,7 @@
     dateLabel.dateTime = item.date;
 
     source.href = item.source || '#';
-    source.hidden = !item.source;
+    source.hidden = fromMessages || !item.source;
   }
 
   function open(n, element) {
@@ -132,14 +134,35 @@
     }
   });
 
+  let suppressImageClick = false;
+
+  image.addEventListener('click', () => {
+    if (!fromMessages) return;
+    if (suppressImageClick) {
+      suppressImageClick = false;
+      return;
+    }
+    close();
+  });
+
   box.addEventListener('touchstart', event => {
     touchStartX = event.changedTouches[0]?.screenX ?? null;
+    suppressImageClick = false;
   }, { passive: true });
 
   box.addEventListener('touchend', event => {
     if (touchStartX === null) return;
+
     const dx = (event.changedTouches[0]?.screenX ?? touchStartX) - touchStartX;
-    if (Math.abs(dx) > 55) show(index + (dx < 0 ? 1 : -1));
+
+    if (Math.abs(dx) > 10) {
+      suppressImageClick = true;
+    }
+
+    if (Math.abs(dx) > 55) {
+      show(index + (dx < 0 ? 1 : -1));
+    }
+
     touchStartX = null;
   }, { passive: true });
 })();
