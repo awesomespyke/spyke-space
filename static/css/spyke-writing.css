@@ -1,0 +1,82 @@
+/* SpykeSpace Writing: quiet, responsive reading surface. */
+
+.spyke-writing {
+  min-height: 100vh;
+  background: var(--spyke-bg);
+  color: var(--spyke-ink);
+}
+
+.spyke-writing__main {
+  width: min(100% - 40px, 680px);
+  margin: 0 auto;
+  padding: clamp(48px, 8vw, 110px) 0 100px;
+}
+
+.spyke-writing__intro,
+.spyke-writing__article-header {
+  margin-bottom: 52px;
+}
+
+.spyke-writing h1 {
+  font-size: clamp(36px, 5vw, 54px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.spyke-writing time {
+  display: block;
+  color: var(--spyke-muted);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.spyke-writing__list {
+  border-top: 1px solid var(--spyke-line);
+}
+
+.spyke-writing__entry {
+  padding: 26px 0;
+  border-bottom: 1px solid var(--spyke-line);
+}
+
+.spyke-writing__entry h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.spyke-writing a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.spyke-writing a:hover {
+  color: var(--spyke-accent);
+}
+
+.spyke-writing__body {
+  font-size: clamp(17px, 1.5vw, 19px);
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.spyke-writing__body p {
+  margin: 0 0 1.5em;
+  white-space: pre-line;
+}
+
+.spyke-writing__footer {
+  margin-top: 70px;
+  padding-top: 24px;
+  border-top: 1px solid var(--spyke-line);
+  color: var(--spyke-muted);
+}
+
+@media (max-width: 600px) {
+  .spyke-writing__main {
+    width: calc(100% - 36px);
+    padding-top: 52px;
+  }
+}

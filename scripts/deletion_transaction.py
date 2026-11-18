@@ -14,7 +14,7 @@ class DeletionTransaction:
         data = json.loads(self.path.read_text(encoding='utf-8'))
         if (data.get('version') != 1 or not isinstance(data.get('identity'), str)
                 or not data['identity'] or not isinstance(data.get('file'), str)
-                or not data['file'].startswith('content/transmissions/')
+                or not data['file'].startswith('content/messages/')
                 or '..' in Path(data['file']).parts):
             raise ValueError('Invalid deletion transaction')
         return data
@@ -22,7 +22,7 @@ class DeletionTransaction:
     def begin(self, identity, relative_file):
         if self.load() is not None:
             raise RuntimeError('Unresolved deletion transaction')
-        if not relative_file.startswith('content/transmissions/') or '..' in Path(relative_file).parts:
+        if not relative_file.startswith('content/messages/') or '..' in Path(relative_file).parts:
             raise ValueError('Unsafe message path')
         self.path.parent.mkdir(parents=True, exist_ok=True)
         fd, tmp = tempfile.mkstemp(prefix='.deletion-', dir=str(self.path.parent))

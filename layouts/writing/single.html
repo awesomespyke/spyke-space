@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div class="spyke-writing">
+  <div class="spyke-writing__main">
+    <article class="spyke-writing__article">
+      <header class="spyke-writing__article-header">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        <h1>{{ .Title }}</h1>
+      </header>
+
+      <div class="spyke-writing__body">
+        {{ .Content }}
+      </div>
+    </article>
+
+    <footer class="spyke-writing__footer">
+      <a href="{{ "writing/" | relURL }}">← All writing</a>
+    </footer>
+  </div>
+</div>
+{{ end }}

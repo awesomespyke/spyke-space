@@ -1,0 +1,6 @@
+<script defer src="{{ "js/spyke-site.js" | relURL }}"></script>
+    {{ range .Scripts }}
+    <script defer src="{{ . | relURL }}"></script>
+    {{ end }}
+</body>
+</html>

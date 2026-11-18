@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 STEM = re.compile(r'^\d{4}-\d\d-\d\d-\d{6}-(\d+)-(album-[A-Za-z0-9_-]+|\d+)$')
-REF = re.compile(r'/transmissions/([A-Za-z0-9_.%-]+)')
+REF = re.compile(r'/messages/([A-Za-z0-9_.%-]+)')
 
 def frontmatter(text):
     if not text.startswith('+++\n'):

@@ -1,0 +1,13 @@
+{{ partial "spyke/shell-start.html" (dict
+    "Page" .
+    "BodyClass" "spyke-site spyke-site--writing"
+    "Styles" (slice "css/spyke-writing.css")
+) }}
+
+<main id="main-content">
+    {{ block "main" . }}{{ end }}
+</main>
+
+{{ partial "spyke/shell-end.html" (dict
+    "Scripts" (slice)
+) }}

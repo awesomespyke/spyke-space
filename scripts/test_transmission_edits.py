@@ -7,11 +7,11 @@ from transmission_edits import caption_block, replace_caption, EditableCaptionEr
 
 class CaptionTests(unittest.TestCase):
     def test_caption_update_keeps_media(self):
-        body = caption_block(17, 'Original') + '\n\n![Transmission photograph](/transmissions/a.jpg)\n'
+        body = caption_block(17, 'Original') + '\n\n![Transmission photograph](/messages/a.jpg)\n'
         changed = replace_caption(body, 17, 'Revised')
         self.assertIn('Revised', changed)
         self.assertNotIn('Original', changed)
-        self.assertIn('/transmissions/a.jpg', changed)
+        self.assertIn('/messages/a.jpg', changed)
         self.assertEqual(changed, replace_caption(changed, 17, 'Revised'))
 
     def test_album_only_changes_target(self):
@@ -26,7 +26,7 @@ class CaptionTests(unittest.TestCase):
             replace_caption('First\n\nSecond', 18, 'Changed', is_album=True)
 
     def test_legacy_single_preserves_media(self):
-        body = 'Old caption\n\n{{< transmission-audio src="/transmissions/a.ogg" >}}\n'
+        body = 'Old caption\n\n{{< transmission-audio src="/messages/a.ogg" >}}\n'
         changed = replace_caption(body, 7, 'New caption')
         self.assertIn('New caption', changed)
         self.assertIn('a.ogg', changed)

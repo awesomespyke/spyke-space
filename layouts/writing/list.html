@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="spyke-writing">
+  <div class="spyke-writing__main">
+    <header class="spyke-writing__intro">
+      <h1>Writing</h1>
+    </header>
+
+    <div class="spyke-writing__list">
+      {{ range .Pages.ByDate.Reverse }}
+      <article class="spyke-writing__entry">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="{{ .Page.Site.Language.Locale }}" dir="{{ default `ltr` .Page.Language.Direction }}">
+<head>
+    {{ partial "head/head.html" .Page }}
+    <link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
+    {{ range .Styles }}
+    <link rel="stylesheet" href="{{ . | relURL }}">
+    {{ end }}
+</head>
+<body class="{{ .BodyClass }}">
+    {{ partial "head/colorScheme" .Page }}
+    {{ partial "spyke/header.html" .Page }}

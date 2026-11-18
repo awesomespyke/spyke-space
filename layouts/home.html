@@ -1,3 +1,11 @@
-{{ define "main" }}
-  {{ partial "spyke/messages.html" . }}
-{{ end }}
+{{ partial "spyke/shell-start.html" (dict
+    "Page" .
+    "BodyClass" "spyke-site spyke-site--chat"
+    "Styles" (slice "css/spyke-messages.css" "css/spyke-gallery.css")
+) }}
+
+{{ partial "spyke/messages.html" . }}
+
+{{ partial "spyke/shell-end.html" (dict
+    "Scripts" (slice "js/spyke-messages.js" "js/spyke-gallery.js")
+) }}

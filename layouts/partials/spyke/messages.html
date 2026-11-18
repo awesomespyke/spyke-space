@@ -1,14 +1,10 @@
-{{ $pages := where .Site.RegularPages "Section" "transmissions" }}
+{{ $pages := where .Site.RegularPages "Section" "messages" }}
 {{ $pages = $pages.ByDate }}
-<link rel="stylesheet" href="{{ "css/spyke-foundation.css" | relURL }}">
-<link rel="stylesheet" href="{{ "css/spyke-messages.css" | relURL }}">
-<link rel="stylesheet" href="{{ "css/spyke-gallery.css" | relURL }}">
+
+
+
 <main class="spyke-chat" aria-label="SpykeSpace Messages">
-  <header class="spyke-chat__header">
-    <a class="spyke-chat__identity" href="{{ .Site.Home.RelPermalink }}"><strong>SpykeSpace</strong></a>
-        {{ partial "spyke/navigation.html" . }}
-    <button class="spyke-chat__theme" type="button" aria-label="Toggle light or dark appearance" title="Toggle appearance">◐</button>
-  </header>
+
   <div class="spyke-chat__thread" id="message-history" aria-label="Message history">
     {{ range $i, $page := $pages }}
       {{ $date := $page.Date.Format "2006-01-02" }}
@@ -26,5 +22,3 @@
   <div id="latest-message" aria-hidden="true"></div>
 </main>
 {{ partial "spyke/lightbox.html" . }}
-<script defer src="{{ "js/spyke-messages.js" | relURL }}"></script>
-<script defer src="{{ "js/spyke-gallery.js" | relURL }}"></script>

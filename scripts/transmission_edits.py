@@ -21,7 +21,7 @@ def replace_caption(body, message_id, caption, is_album=False):
         raise EditableCaptionError('Older album has no reliable per-message caption markers.')
     # Legacy single-message Markdown: caption precedes media/preview blocks.
     # Never infer album ownership. Keep all existing media and previews intact.
-    media = re.search(r'(?m)^(!\[Transmission photograph\]\(/transmissions/|\{\{< transmission-(?:audio|video|link)\b)', body)
+    media = re.search(r'(?m)^(!\[Transmission photograph\]\(/messages/|\{\{< transmission-(?:audio|video|link)\b)', body)
     if media:
         tail = body[media.start():]
         return (caption + '\n\n' if caption else '') + tail

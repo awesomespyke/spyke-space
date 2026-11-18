@@ -11,11 +11,11 @@
       <nav id="spyke-nav-panel" class="spyke-floating-nav__panel"
            aria-label="SpykeSpace destinations" hidden>
         <a href="{{ .Site.Home.RelPermalink }}" {{ if .IsHome }}aria-current="page"{{ end }}
-           aria-label="Messages" title="Messages">
+           aria-label="Chat" title="Chat">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5 8 8 0 0 1-3.2-.7L4 20l1.7-5.3a8 8 0 0 1-.7-3.2A7.5 7.5 0 0 1 12.5 4 7.5 7.5 0 0 1 20 11.5Z"/>
           </svg>
-          <span class="spyke-floating-nav__label">Messages</span>
+          <span class="spyke-floating-nav__label">Chat</span>
         </a>
         <a href="https://library.spyke.space/"
            aria-label="Library" title="Library">
@@ -24,7 +24,15 @@
           </svg>
           <span class="spyke-floating-nav__label">Library</span>
         </a>
-        <a href="{{ "gallery/" | relURL }}"{{ if eq .Section "gallery" }} aria-current="page"{{ end }}
+        <a href="{{ "writing/" | relURL }}"{{ if eq .Section "writing" }} aria-current="page"{{ end }}
+           aria-label="Writing" title="Writing">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/>
+            <path d="M14 3v6h5M9 13h7M9 17h7"/>
+          </svg>
+          <span class="spyke-floating-nav__label">Writing</span>
+        </a>
+        <a href="{{ "photos/" | relURL }}"{{ if eq .Section "photos" }} aria-current="page"{{ end }}
            aria-label="Photos" title="Photos">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <rect x="3" y="4" width="18" height="16" rx="2"/>

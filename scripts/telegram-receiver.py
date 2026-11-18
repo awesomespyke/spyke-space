@@ -22,8 +22,8 @@ from deletion_transaction import DeletionTransaction, reconcile as reconcile_del
 from transmission_edits import caption_block, replace_caption, EditableCaptionError
 
 ROOT = Path(__file__).resolve().parent.parent
-CONTENT = ROOT / 'content' / 'transmissions'
-MEDIA = ROOT / 'static' / 'transmissions'
+CONTENT = ROOT / 'content' / 'messages'
+MEDIA = ROOT / 'static' / 'messages'
 STATE = Path.home() / '.local' / 'state' / 'spykespace-transmissions' / 'offset.json'
 PENDING = STATE.with_name('pending-deletion.json')
 JOURNAL_PATH = STATE.with_name('update-journal.json')
@@ -221,7 +221,7 @@ def merge_album(token, messages, record):
             if not target.exists():
                 download(token, info, target)
             new_files.append(target)
-            new_blocks.append(render_item(kind, '/transmissions/' + urllib.parse.quote(name)))
+            new_blocks.append(render_item(kind, '/messages/' + urllib.parse.quote(name)))
         merged_ids = sorted(known_ids | {m['message_id'] for m in additions})
         merged_refs = sorted(set(record['media']) | {p.name for p in new_files})
         def replace_field(field, value):
@@ -299,7 +299,7 @@ def publish(token, messages):
             if not path.exists():
                 download(token, info, path)
             media_files.append(path)
-            blocks.append(render_item(kind, '/transmissions/' + urllib.parse.quote(name)))
+            blocks.append(render_item(kind, '/messages/' + urllib.parse.quote(name)))
         if not captions and not blocks:
             raise ValueError('Empty transmission.')
         front = [

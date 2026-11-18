@@ -1,6 +1,6 @@
 {{- $kind := .kind -}}
 {{- $items := slice -}}
-{{- range where .site.RegularPages "Section" "transmissions" -}}
+{{- range where .site.RegularPages "Section" "messages" -}}
   {{- $page := . -}}
   {{- $media := .Params.spyke_media | default (slice) -}}
   {{- $raw := .RawContent -}}
@@ -8,7 +8,7 @@
   {{- if eq (len $media) 1 -}}
     {{- $caption = $raw -}}
     {{- $caption = replaceRE `(?s)\{\{<\s*transmission-(audio|video)\b[^>]*>\}\}` "" $caption -}}
-    {{- $caption = replaceRE `(?m)^!?\[[^\]]*\]\(/transmissions/[^)]+\)\s*$` "" $caption -}}
+    {{- $caption = replaceRE `(?m)^!?\[[^\]]*\]\(/messages/[^)]+\)\s*$` "" $caption -}}
     {{- $caption = replaceRE `(?s)\{\{<\s*transmission-link\b.*?>\}\}` "" $caption -}}
     {{- $caption = trim $caption " \r\n\t" -}}
   {{- end -}}
@@ -24,12 +24,12 @@
       {{- $type = "videos" -}}
     {{- end -}}
     {{- if eq $type $kind -}}
-      {{- $items = append (dict "src" (printf "transmissions/%s" $filename | relURL) "page" $page.RelPermalink "date" $page.Date "caption" $caption "filename" $filename) $items -}}
+      {{- $items = append (dict "src" (printf "messages/%s" $filename | relURL) "page" $page.RelPermalink "date" $page.Date "caption" $caption "filename" $filename) $items -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- if eq $kind "videos" -}}
-  {{- range where .site.RegularPages "Section" "transmissions" -}}
+  {{- range where .site.RegularPages "Section" "messages" -}}
     {{- $page := . -}}
     {{- $matches := findRE `\{\{<\s*transmission-youtube\s+id="([A-Za-z0-9_-]{11})"\s*>\}\}` .RawContent -}}
     {{- range $matches -}}
