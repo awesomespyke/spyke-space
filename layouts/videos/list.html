@@ -10,7 +10,10 @@
 
 <main class="spyke-chat spyke-media" aria-label="SpykeSpace Videos">
 
-  <section class="spyke-media__body" aria-label="Videos"><h1>Videos</h1>
+  <header class="spyke-media__page-heading">
+    <h1>Videos</h1>
+  </header>
+  <section class="spyke-media__body" aria-label="Videos">
     {{ if $items }}<div class="spyke-media__list">
       {{ range $items }}<article class="spyke-media__item">
         {{ if .youtube }}

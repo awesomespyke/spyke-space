@@ -204,3 +204,40 @@ html[data-scheme="dark"] .spyke-chat,body[data-scheme="dark"] .spyke-chat{--chat
         max-width: 100%;
     }
 }
+/* Chat: centered editorial layout. */
+.spyke-site--chat .spyke-chat {
+    padding: clamp(48px, 8vw, 110px) 0 100px;
+}
+
+.spyke-site--chat .spyke-chat__intro,
+.spyke-site--chat .spyke-chat__thread {
+    width: min(100% - 40px, 760px);
+    margin-inline: auto;
+}
+
+.spyke-site--chat .spyke-chat__intro {
+    margin-bottom: 52px;
+}
+
+.spyke-site--chat .spyke-chat__intro h1 {
+    margin: 0;
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+}
+
+.spyke-site--chat .spyke-chat__thread {
+    padding: 0;
+}
+
+@media (max-width: 600px) {
+    .spyke-site--chat .spyke-chat {
+        padding-top: 52px;
+    }
+
+    .spyke-site--chat .spyke-chat__intro,
+    .spyke-site--chat .spyke-chat__thread {
+        width: calc(100% - 36px);
+    }
+}

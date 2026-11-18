@@ -217,3 +217,33 @@ html[data-theme="dark"] {
     display: none;
   }
 }
+
+/* Editorial headings for wide media collections. */
+.spyke-site--media .spyke-gallery__page-heading,
+.spyke-site--media .spyke-media__page-heading {
+    width: min(100% - 40px, 680px);
+    margin: 0 auto 52px;
+    padding-top: clamp(48px, 8vw, 110px);
+}
+
+.spyke-site--media .spyke-gallery__page-heading h1,
+.spyke-site--media .spyke-media__page-heading h1 {
+    margin: 0;
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+}
+
+.spyke-site--media:has(.spyke-gallery__page-heading) .spyke-gallery__body,
+.spyke-site--media:has(.spyke-media__page-heading) .spyke-media__body {
+    padding-top: 0;
+}
+
+@media (max-width: 600px) {
+    .spyke-site--media .spyke-gallery__page-heading,
+    .spyke-site--media .spyke-media__page-heading {
+        width: calc(100% - 36px);
+        padding-top: 52px;
+    }
+}
