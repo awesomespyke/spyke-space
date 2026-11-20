@@ -445,10 +445,33 @@ def delete_command(token, message):
 
 
 def push_pending():
-    # A failed git push after a successful commit leaves a clean tree and an unpushed commit.
-    # Push before accepting further messages; a repeated message then resolves as duplicate.
-    git('push', 'origin', 'main')
+    """Synchronize remote changes and recover unpublished local commits safely."""
+    if git('status', '--porcelain').stdout.strip():
+        raise RuntimeError('Git working tree is not clean; synchronization deferred.')
 
+    git('fetch', 'origin', 'main')
+
+    local = git('rev-parse', 'main').stdout.strip()
+    remote = git('rev-parse', 'origin/main').stdout.strip()
+
+    if local == remote:
+        return
+
+    base = git('merge-base', 'main', 'origin/main').stdout.strip()
+
+    if base == local:
+        # GitHub advanced; no unpublished local commits.
+        git('merge', '--ff-only', 'origin/main')
+        return
+
+    if base == remote:
+        # Only local commits are unpublished.
+        git('push', 'origin', 'main')
+        return
+
+    raise RuntimeError(
+        'Local and GitHub histories diverged; manual reconciliation required.'
+    )
 
 ALBUM_QUIET_SECONDS = 3.0
 ALBUM_MAX_WAIT_SECONDS = 12.0
