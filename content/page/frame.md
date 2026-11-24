@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/Jason_Lucia_Rooftop_With_Logos_portrait.jpg"
+image: "/frame/bubbles.html"
 orientation: "portrait"
-type: "image"
+type: "html"
 ---

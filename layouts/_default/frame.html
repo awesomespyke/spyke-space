@@ -213,6 +213,15 @@
 
   <video src="{{ .Params.image }}" autoplay muted loop playsinline></video>
 
+{{ else if eq .Params.type "html" }}
+
+  <iframe
+    src="{{ .Params.image }}"
+    title="Computational artwork"
+    style="display:block;width:100%;height:100%;border:0;"
+    sandbox="allow-scripts">
+  </iframe>
+
 {{ else if eq .Params.type "model" }}
 
   <model-viewer
