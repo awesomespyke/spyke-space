@@ -1,8 +1,8 @@
----
+﻿---
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: "/frame/bubbles.html"
+image: /frame/neko.html
 orientation: "portrait"
-type: "html"
+type: html
 ---
