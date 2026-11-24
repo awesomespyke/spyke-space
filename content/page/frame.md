@@ -2,7 +2,8 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: /frame/neko.html
-orientation: "portrait"
+image: /frame/veiltail.html
+orientation: landscape
 type: html
 ---
+
