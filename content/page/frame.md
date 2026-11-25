@@ -1,24 +1,8 @@
-﻿---
+---
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: /frame/neko.html
+image: -ekH3Ghnr-s
 orientation: landscape
-type: html
+type: youtube
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
