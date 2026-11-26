@@ -2,7 +2,7 @@
 title: "Frame"
 url: "/frame/"
 layout: "frame"
-image: -ekH3Ghnr-s
+image: _O09R1OGtE8
 orientation: landscape
 type: youtube
 ---
